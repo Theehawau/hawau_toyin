@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PROFILE } from '../data/portfolioData';
 import { ArrowDown, Github, Globe, GraduationCap, MapPin, Mail, Linkedin, Languages } from 'lucide-react';
 
@@ -12,6 +12,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
   const [avatarSrc, setAvatarSrc] = useState<string>(() => {
     return localStorage.getItem('hawau_avatar_photo') || 'funny_face.JPG';
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(PROFILE.email);
@@ -19,10 +20,34 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
   };
 
   const handleImageError = () => {
-    // If funny_face.JPG cannot be directly resolved by browser relative path, fallback to her real portrait
+    // If funny_face.JPG cannot be directly resolved by browser relative path, fallback to her portrait
     if (avatarSrc !== PROFILE.avatar) {
       setAvatarSrc(PROFILE.avatar);
     }
+  };
+
+  const processFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      if (result) {
+        setAvatarSrc(result);
+        localStorage.setItem('hawau_avatar_photo', result);
+        onShowToast("Updated profile photo with your exact image!");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processFile(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
   };
 
   return (
@@ -165,18 +190,24 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
               
               {/* Outer container with single hairline border */}
               <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-[#10131F]/60 p-2 backdrop-blur-sm shadow-2xl">
-                <div className="relative aspect-[4/5] sm:aspect-[4/5] overflow-hidden rounded-xl bg-slate-900 group">
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={handleDrop}
+                  title="Click or drag & drop to replace with your exact photo"
+                  className="relative aspect-[4/5] sm:aspect-[4/5] overflow-hidden rounded-xl bg-slate-900 group cursor-pointer"
+                >
                   <img
                     src={avatarSrc}
                     onError={handleImageError}
                     alt="Hawau Olamide Toyin, PhD Researcher"
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-center filter contrast-[1.02] transition-transform duration-700 hover:scale-105"
+                    className="w-full h-full object-cover object-center filter contrast-[1.02] transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
                   
                   {/* Subtle lower card overlay without phone number */}
-                  <div className="absolute bottom-3.5 left-4 right-4 text-white">
+                  <div className="absolute bottom-3.5 left-4 right-4 text-white pointer-events-none">
                     <p className="text-sm font-bold tracking-wide text-amber-300">{PROFILE.name}</p>
                     <p className="text-xs text-slate-300 font-medium">{PROFILE.department}</p>
                     <div className="flex items-center gap-1.5 text-[11px] text-slate-300 mt-1">
@@ -184,6 +215,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                       <span>{PROFILE.location} · {PROFILE.institution}</span>
                     </div>
                   </div>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
                 </div>
               </div>
 
