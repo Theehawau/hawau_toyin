@@ -191,7 +191,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
               <div className="mt-4 p-4 rounded-xl border border-white/10 bg-[#121522]/90 backdrop-blur-md shadow-lg">
                 <div className="grid grid-cols-2 gap-3 text-left">
                   {PROFILE.stats.map((stat) => (
-                    <div key={stat.label} className="border-l border-amber-400/40 pl-3">
+                    <div key={`${stat.label}-${stat.value}`} className="border-l border-amber-400/40 pl-3">
                       <p className="font-mono text-base font-bold text-white tabular-nums tracking-tight">
                         {stat.value}
                       </p>

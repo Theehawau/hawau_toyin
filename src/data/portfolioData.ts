@@ -109,7 +109,7 @@ export const PROFILE = {
   huggingface: "https://huggingface.co/herwoww",
   scholar: "https://scholar.google.com/citations?user=hawau_olamide",
   website: "https://theehawau.github.io",
-  avatar: "/src/assets/images/original_papers/hawau_profile.jpg",
+  avatar: "hawau_profile.jpg",
   researchInterests: [
     "AI for stuttered speech",
     "Efficient, Multilingual & Multimodal NLP",
