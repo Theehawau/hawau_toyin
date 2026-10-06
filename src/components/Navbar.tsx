@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { PROFILE } from '../data/portfolioData';
-import { FileText, Mail, Menu, X } from 'lucide-react';
+import { FileText, Mail, Menu, X, Sun, Moon } from 'lucide-react';
 
 interface NavbarProps {
+  theme: 'dark' | 'light';
+  onToggleTheme: () => void;
   onOpenCV: () => void;
   onOpenContact: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenCV, onOpenContact }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  theme,
+  onToggleTheme,
+  onOpenCV,
+  onOpenContact,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -58,8 +65,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCV, onOpenContact }) => {
           ))}
         </nav>
 
-        {/* Zone 3: 1-2 primary actions */}
-        <div className="flex items-center gap-3">
+        {/* Zone 3: 1-2 primary actions + theme toggle */}
+        <div className="flex items-center gap-2.5">
+          {/* Dark / Light Toggle */}
+          <button
+            onClick={onToggleTheme}
+            className="p-2 rounded-lg text-slate-300 hover:text-amber-400 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-amber-600" />
+            )}
+          </button>
+
           <button
             onClick={onOpenCV}
             className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors whitespace-nowrap"
@@ -88,6 +109,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCV, onOpenContact }) => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#0D0F18] border-b border-white/10 px-6 py-4 space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-white/10">
+            <span className="text-xs text-slate-400">Theme</span>
+            <button
+              onClick={onToggleTheme}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-200 bg-white/5 border border-white/10 rounded-md"
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Dark Mode</span>
+                </>
+              )}
+            </button>
+          </div>
           {navLinks.map((link) => (
             <a
               key={link.name}

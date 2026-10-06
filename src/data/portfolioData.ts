@@ -123,7 +123,7 @@ export const PROFILE = {
     { language: "French", proficiency: "A2" },
     { language: "Arabic", proficiency: "A1" }
   ],
-  bio: "PhD researcher at MBZUAI specialized in AI for stuttered speech, efficient multilingual & multimodal NLP, data curation & annotation, and speech recognition & generation. Recipient of the Interspeech 2026 Speech Pathology Best Paper Award and Alibaba Cloud x GITEX AI Hackathon Champion.",
+  bio: "a PhD student at MBZUAI under Dr Hanan Aldarmaki working on building speech models for real world impact, particularly in low-resource and atypical speech areas. My PhD thesis is on building models for automatic stutter severity assessment in collaboration with speech-language pathologists. I enjoy collaborating on interesting resource development projects and contributing open-source resource for the research community.",
   heroPunchline: "AI for stuttered speech · Efficient, Multilingual & Multimodal NLP · Data Curation & Annotation · Speech Recognition & Generation",
   stats: [
     { label: "Best Paper Award", value: "Speech Pathology", detail: "Speech Pathology Australia @ Interspeech 2026" },

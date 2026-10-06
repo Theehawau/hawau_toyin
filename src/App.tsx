@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PROFILE } from './data/portfolioData';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -17,10 +17,28 @@ import { ContactModal } from './components/ContactModal';
 import { Toast } from './components/Toast';
 
 export default function App() {
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('portfolio_theme') as 'dark' | 'light') || 'dark';
+  });
   const [cvModalOpen, setCvModalOpen] = useState<boolean>(false);
   const [contactModalOpen, setContactModalOpen] = useState<boolean>(false);
   const [publicationFilter, setPublicationFilter] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+    localStorage.setItem('portfolio_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -39,9 +57,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090A0F] text-slate-100 selection:bg-amber-400 selection:text-black">
+    <div className="min-h-screen bg-[#090A0F] text-slate-100 selection:bg-amber-400 selection:text-black transition-colors duration-200">
       {/* Navigation Top Bar Contract */}
       <Navbar
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onOpenCV={() => setCvModalOpen(true)}
         onOpenContact={() => setContactModalOpen(true)}
       />

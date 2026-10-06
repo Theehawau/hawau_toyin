@@ -10,7 +10,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast }) => {
   const [avatarSrc, setAvatarSrc] = useState<string>(() => {
-    return localStorage.getItem('hawau_avatar_photo') || 'funny_face.JPG';
+    return 'funny_face.JPG';
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -189,13 +189,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
             <div className="relative mx-auto max-w-sm lg:max-w-none">
               
               {/* Outer container with single hairline border */}
-              <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-[#10131F]/60 p-2 backdrop-blur-sm shadow-2xl">
+              <div
+                style={{ width: '385px', height: '450px' }}
+                className="relative overflow-hidden rounded-2xl border border-white/15 bg-[#10131F]/60 p-2 backdrop-blur-sm shadow-2xl max-w-full mx-auto"
+              >
                 <div 
                   onClick={() => fileInputRef.current?.click()}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleDrop}
                   title="Click or drag & drop to replace with your exact photo"
-                  className="relative aspect-[4/5] sm:aspect-[4/5] overflow-hidden rounded-xl bg-slate-900 group cursor-pointer"
+                  className="relative w-full h-full overflow-hidden rounded-xl bg-slate-900 group cursor-pointer"
                 >
                   <img
                     src={avatarSrc}
