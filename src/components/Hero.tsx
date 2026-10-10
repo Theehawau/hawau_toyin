@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { PROFILE } from '../data/portfolioData';
-import { ArrowDown, Github, Globe, GraduationCap, MapPin, Mail, Linkedin, Languages } from 'lucide-react';
+import { ArrowDown, Github, Globe, GraduationCap, MapPin, Mail, Linkedin, Languages, ExternalLink, Award, Mic2, Sparkles } from 'lucide-react';
 
 interface HeroProps {
   onOpenCV: () => void;
@@ -61,18 +61,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
           
           {/* Left Column: Typographic & Profile Impact (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
-            
-            {/* Editorial Kicker (Unboxed text with typographic separator) */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-amber-400 tracking-wider uppercase">
-              <span>{PROFILE.title}</span>
-              <span aria-hidden="true" className="text-amber-400/50">·</span>
-              <span>{PROFILE.institution}</span>
-            </div>
 
             {/* Researcher Name */}
             <h1
-              className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-none"
-              style={{ fontFamily: 'var(--font-display)' }}
+              className="font-extrabold tracking-tight text-white leading-tight"
+              style={{ fontFamily: 'var(--font-display)', fontSize: '52px' }}
             >
               {PROFILE.name}
             </h1>
@@ -119,6 +112,23 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                 <Mail className="w-3.5 h-3.5" />
                 <span>{PROFILE.email}</span>
               </button>
+            </div>
+
+            {/* Executive AI Facilitation Spotlight Pill */}
+            <div className="pt-2">
+              <a
+                href={PROFILE.executiveProgramUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-xs transition-colors"
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+                <span className="font-semibold text-amber-300">Executive Facilitator:</span>
+                <span className="text-slate-300 group-hover:text-white transition-colors">
+                  AI for Business Brainstorming · MBZUAI Executive Program & AI Leadership Training
+                </span>
+                <ExternalLink className="w-3.5 h-3.5 text-amber-400 shrink-0 ml-0.5" />
+              </a>
             </div>
 
             {/* Academic Profiles & Social Links */}
@@ -229,22 +239,68 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                 </div>
               </div>
 
-              {/* Adjacent Quantitative Proof Card from CV */}
-              <div className="mt-4 p-4 rounded-xl border border-white/10 bg-[#121522]/90 backdrop-blur-md shadow-lg">
-                <div className="grid grid-cols-2 gap-3 text-left">
-                  {PROFILE.stats.map((stat) => (
-                    <div key={`${stat.label}-${stat.value}`} className="border-l border-amber-400/40 pl-3">
-                      <p className="font-mono text-base font-bold text-white tabular-nums tracking-tight">
-                        {stat.value}
-                      </p>
-                      <p className="text-[11px] font-semibold text-amber-400/90 leading-tight mt-0.5">
-                        {stat.label}
-                      </p>
-                      <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
-                        {stat.detail}
-                      </p>
-                    </div>
-                  ))}
+              {/* Recent Updates Card (Upcoming Talk & Most Recent Award) */}
+              <div className="mt-4 p-4 rounded-xl border border-white/10 bg-[#121522]/90 backdrop-blur-md shadow-lg space-y-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400 uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Recent Updates</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                    Latest 2026
+                  </span>
+                </div>
+
+                {/* 1. Most Recent Award */}
+                <div className="border-l-2 border-amber-400 pl-3 py-0.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-semibold text-amber-300 flex items-center gap-1">
+                      <Award className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Most Recent Award</span>
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400">Interspeech 2026</span>
+                  </div>
+                  <p className="text-xs font-bold text-white mt-1 leading-snug">
+                    Speech Pathology Australia Best Paper Award
+                  </p>
+                  <p className="text-[11px] text-slate-300 mt-0.5 leading-relaxed">
+                    Recognized for pioneering research on aligning speech AI with clinical and end-user needs.
+                  </p>
+                  <a
+                    href={PROFILE.awardNewsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors mt-1.5"
+                  >
+                    <span>Read MBZUAI News Feature</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+
+                {/* 2. Upcoming Talk */}
+                <div className="border-l-2 border-indigo-400 pl-3 py-0.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-semibold text-indigo-300 flex items-center gap-1">
+                      <Mic2 className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Upcoming Talk</span>
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400">Oct 13, 2026</span>
+                  </div>
+                  <p className="text-xs font-bold text-white mt-1 leading-snug">
+                    STTATTS: Unified Speech-to-Text & Text-to-Speech
+                  </p>
+                  <p className="text-[11px] text-slate-300 mt-0.5 leading-relaxed">
+                    Alexandria University · Alexandria, Egypt
+                  </p>
+                  <a
+                    href="https://arxiv.org/abs/2410.18607"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-300 hover:text-indigo-200 transition-colors mt-1.5"
+                  >
+                    <span>Paper & Abstract Details</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
                 </div>
               </div>
 

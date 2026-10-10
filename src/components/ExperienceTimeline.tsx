@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { EDUCATION, EXPERIENCE, LEADERSHIP_VOLUNTEERING } from '../data/portfolioData';
-import { Building2, MapPin, GraduationCap, Users, Briefcase } from 'lucide-react';
+import { Building2, MapPin, GraduationCap, Users, Briefcase, ExternalLink, Sparkles } from 'lucide-react';
 
 export const ExperienceTimeline: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'experience' | 'education' | 'leadership'>('all');
@@ -10,7 +10,7 @@ export const ExperienceTimeline: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
           <div>
             <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest">
               Career, Education & Leadership (from CV)
@@ -19,7 +19,7 @@ export const ExperienceTimeline: React.FC = () => {
               className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Academic Trajectory
+              Academic Trajectory & Leadership
             </h2>
           </div>
 
@@ -53,7 +53,7 @@ export const ExperienceTimeline: React.FC = () => {
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Research Experience
+              Research & Facilitation
             </button>
             <button
               onClick={() => setActiveTab('leadership')}
@@ -65,6 +65,41 @@ export const ExperienceTimeline: React.FC = () => {
             >
               Leadership & Service
             </button>
+          </div>
+        </div>
+
+        {/* Executive AI Facilitation Spotlight Banner */}
+        <div className="mb-10 p-6 rounded-2xl border border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-[#10131F]/90 to-[#0E111C] shadow-lg relative overflow-hidden">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-3xl">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Executive Leadership & Facilitation</span>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight">
+                AI for Business Brainstorming & Leadership Training
+              </h3>
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                Facilitating applied AI strategy and enterprise brainstorming sessions for the <span className="text-white font-medium">MBZUAI Executive Program</span> and specialized <span className="text-white font-medium">AI Leadership Training</span> cohorts. Guiding government officials, C-suite executives, and organizational transformation leaders through strategic AI problem formulation, multimodal roadmaps, and ethical enterprise adoption.
+              </p>
+              <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-amber-300/90 font-medium">
+                <span>Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)</span>
+                <span aria-hidden="true" className="text-amber-400/50">·</span>
+                <span>Abu Dhabi, UAE</span>
+              </div>
+            </div>
+
+            <div className="shrink-0">
+              <a
+                href="https://mbzuai.ac.ae/news-events/news/mohamed-bin-zayed-university-artificial-intelligence-hosts-ai-leadership-training"
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wide transition-colors inline-flex items-center gap-2 shadow-md"
+              >
+                <span>Read Leadership Training Article</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </div>
 

@@ -45,6 +45,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
 
   const subjectOptions = [
     'Research Collaboration Inquiry',
+    'AI for Business Brainstorming / Executive Training',
     'Speech Recognition / Atypical Speech Research',
     'Speaking or Seminar Invitation',
     'Academic Question or Paper Inquiry',

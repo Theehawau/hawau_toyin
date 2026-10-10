@@ -10,7 +10,7 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
   const pillars = [
     {
       id: "stuttered-speech",
-      title: "AI for stuttered speech",
+      title: "AI for Stuttered Speech",
       icon: <Activity className="w-5 h-5 text-amber-400" />,
       shortDesc: "Pioneering clinically grounded dual-reference benchmarks, scoping reviews, and automatic severity annotations to make speech technologies equitable for people who stutter.",
       award: "Speech Pathology Best Paper Award (Speech Pathology Australia @ Interspeech 2026)",
@@ -26,15 +26,19 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
       ]
     },
     {
-      id: "multilingual-nlp",
-      title: "Efficient, Multilingual & Multimodal NLP",
-      icon: <Globe2 className="w-5 h-5 text-indigo-400" />,
-      shortDesc: "Developing parameter-efficient models, evaluating large language models on African and low-resource languages, and auditing vision-language systems across 100 culturally diverse languages.",
+      id: "multilingual-speech-nlp",
+      title: "Speech Recognition, Generation & Multimodal NLP",
+      icon: <Radio className="w-5 h-5 text-indigo-400" />,
+      shortDesc: "Architecting unified multi-task speech-to-text & text-to-speech transformers, foundational multilingual representations, parameter-efficient LLM diacritizers, and auditing vision-language systems across 100 languages.",
+      award: "Best Paper Award (ArabicNLP @ EMNLP 2023 for ArTST)",
       bullets: [
+        "STTATTS: Unified Speech-to-Text & Text-to-Speech Model (EMNLP 2024)",
+        "ArTST: Arabic Text and Speech Transformer (EMNLP Best Paper)",
         "Are LLMs Good Text Diacritizers? Arabic & Yoruba Case Study (LREC 2026)",
         "Evaluating LMMs on Culturally Diverse 100 Languages (CVPR 2025)",
         "Evaluating LLM Performance on African Languages (ACL 2025)",
-        "Limits of Detecting Machine-Generated Text (COLING 2025)"
+        "Dialectal Coverage and Generalization in Arabic ASR (ACL 2025)",
+        "Infant Cry Detection Using Causal Temporal Representation (ICASSP 2025)"
       ]
     },
     {
@@ -47,19 +51,6 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
         "Gretino: Greek & Latin Classical Language Dataset (LREC 2026)",
         "PolyWER Code-Switched Transliteration & Translation Annotations",
         "NADI & Iqra’Eval Arabic Speech Shared Tasks (ArabicNLP 2025)"
-      ]
-    },
-    {
-      id: "speech-rec-gen",
-      title: "Speech Recognition & Generation",
-      icon: <Radio className="w-5 h-5 text-pink-400" />,
-      shortDesc: "Architecting unified multi-task speech-to-text and text-to-speech models, foundational Arabic transformers, and causal temporal acoustic representations.",
-      award: "Best Paper Award (ArabicNLP @ EMNLP 2023 for ArTST)",
-      bullets: [
-        "STTATTS: Unified Speech-to-Text & Text-to-Speech Model (EMNLP 2024)",
-        "ArTST: Arabic Text and Speech Transformer (Best Paper Award)",
-        "Dialectal Coverage and Generalization in Arabic ASR (ACL 2025)",
-        "Infant Cry Detection Using Causal Temporal Representation (ICASSP 2025)"
       ]
     }
   ];
@@ -82,12 +73,12 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
             </h2>
           </div>
           <p className="text-sm text-slate-400 max-w-md">
-            Organized across four foundational research programs spanning atypical speech, multilingual NLP, data curation, and acoustic modeling.
+            Organized across three foundational programs spanning atypical speech, unified multilingual acoustic & NLP architectures, and data curation.
           </p>
         </div>
 
-        {/* 4 Research Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* 3 Research Pillars Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {pillars.map((pillar, idx) => (
             <div
               key={pillar.id}

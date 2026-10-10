@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Publication, ALL_PUBLICATIONS, SHARED_TASKS, PROFILE } from '../data/portfolioData';
-import { Search, Copy, Check, ChevronDown, ChevronUp, ExternalLink, Github, BookOpen, Layers, Trophy, Globe } from 'lucide-react';
+import { Search, Copy, Check, ChevronDown, ChevronUp, ExternalLink, Github, BookOpen, Layers, Trophy, Globe, Database, GraduationCap } from 'lucide-react';
 
 interface PublicationsSectionProps {
   onShowToast: (msg: string) => void;
@@ -19,23 +19,34 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
   // Sync state if selectedCategoryFilter prop changes
   React.useEffect(() => {
     if (selectedCategoryFilter) {
-      setActiveCategory(selectedCategoryFilter);
+      if (
+        selectedCategoryFilter === 'multilingual-nlp' ||
+        selectedCategoryFilter === 'speech-rec-gen' ||
+        selectedCategoryFilter === 'multilingual-speech-nlp'
+      ) {
+        setActiveCategory('speech-multilingual-nlp');
+      } else {
+        setActiveCategory(selectedCategoryFilter);
+      }
     }
   }, [selectedCategoryFilter]);
 
   const filterTabs = [
-    { id: 'all', label: 'All Publications (15)' },
-    { id: 'stuttered-speech', label: 'AI for stuttered speech' },
-    { id: 'multilingual-nlp', label: 'Efficient, Multilingual & Multimodal NLP' },
-    { id: 'data-curation', label: 'Data Curation & Annotation' },
-    { id: 'speech-rec-gen', label: 'Speech Recognition & Generation' }
+    { id: 'all', label: `All Publications (${ALL_PUBLICATIONS.length})` },
+    { id: 'speech-multilingual-nlp', label: 'Speech Recognition, Generation & Multimodal NLP' },
+    { id: 'data-curation', label: 'Data Curation & Annotation' }
   ];
 
   const handleCopyCitation = (pub: Publication) => {
-    const citation = `${pub.authors.join(', ')}. "${pub.title}." ${pub.venue} (${pub.year}).`;
-    navigator.clipboard.writeText(citation);
+    const bibtex = pub.bibtex || `@inproceedings{toyin${pub.year},
+  title={${pub.title}},
+  author={${pub.authors.join(' and ')}},
+  booktitle={${pub.venue}},
+  year={${pub.year}}
+}`;
+    navigator.clipboard.writeText(bibtex);
     setCopiedId(pub.id);
-    onShowToast(`Copied citation for "${pub.title.slice(0, 32)}..."`);
+    onShowToast(`Copied BibTeX citation for "${pub.title.slice(0, 30)}..."`);
     setTimeout(() => setCopiedId(null), 2500);
   };
 
@@ -44,7 +55,10 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
   };
 
   const filteredPubs = ALL_PUBLICATIONS.filter((pub) => {
-    const matchesCategory = activeCategory === 'all' || pub.category === activeCategory;
+    const matchesCategory =
+      activeCategory === 'all' ||
+      pub.category === activeCategory;
+
     const matchesSearch =
       searchQuery === '' ||
       pub.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -73,9 +87,6 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
               * - indicates equal contribution
             </p>
           </div>
-          <p className="text-sm text-slate-400 max-w-md">
-            Published and presented manuscripts across Interspeech, EMNLP, ACL, LREC, CVPR, ICASSP, and COLING.
-          </p>
         </div>
 
         {/* Featured StutterBank Callout Banner */}
@@ -177,12 +188,6 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
                         <span className="font-semibold text-amber-400">{pub.venue}</span>
                         <span aria-hidden="true">·</span>
                         <span className="font-mono tabular-nums">{pub.year}</span>
-                        {pub.highlight && pub.highlight !== pub.venue && (
-                          <>
-                            <span aria-hidden="true">·</span>
-                            <span className="text-amber-300 font-semibold">{pub.highlight}</span>
-                          </>
-                        )}
                         {pub.isEqualContribution && (
                           <>
                             <span aria-hidden="true">·</span>
@@ -230,31 +235,34 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
                     <div className="flex flex-wrap items-center gap-2 shrink-0 self-start md:self-auto">
                       <button
                         onClick={() => handleCopyCitation(pub)}
-                        className="px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-colors inline-flex items-center gap-1.5"
-                        title="Copy formatted citation"
+                        className="px-2.5 py-1.5 text-xs font-mono font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-colors inline-flex items-center gap-1.5"
+                        title="Copy BibTeX Citation"
+                        aria-label="Copy BibTeX Citation"
                       >
                         {isCopied ? (
                           <>
                             <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span className="text-emerald-400">Copied</span>
+                            <span className="text-emerald-400 font-semibold">Copied BibTeX</span>
                           </>
                         ) : (
                           <>
                             <Copy className="w-3.5 h-3.5 text-slate-400" />
-                            <span>Cite</span>
+                            <span>BibTeX</span>
                           </>
                         )}
                       </button>
 
-                      {pub.links.project && (
+                      {pub.links.dataset && (
                         <a
-                          href={pub.links.project}
+                          href={pub.links.dataset}
                           target="_blank"
                           rel="noreferrer"
-                          className="px-3 py-1.5 text-xs font-medium rounded-lg bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 hover:text-amber-200 transition-colors inline-flex items-center gap-1"
+                          className="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 hover:text-emerald-200 transition-colors inline-flex items-center gap-1.5"
+                          title="Explore Dataset"
+                          aria-label="Explore Dataset"
                         >
-                          <Globe className="w-3.5 h-3.5 text-amber-400" />
-                          <span>StutterBank</span>
+                          <Database className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Dataset</span>
                         </a>
                       )}
 
@@ -263,10 +271,24 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
                           href={pub.links.paper}
                           target="_blank"
                           rel="noreferrer"
-                          className="px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-colors inline-flex items-center gap-1"
+                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-amber-400 transition-colors inline-flex items-center justify-center"
+                          title="Read Paper"
+                          aria-label="Read Paper"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span>Paper</span>
+                          <BookOpen className="w-4 h-4" />
+                        </a>
+                      )}
+
+                      {pub.links.scholar && (
+                        <a
+                          href={pub.links.scholar}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-blue-400 transition-colors inline-flex items-center justify-center"
+                          title="View on Google Scholar"
+                          aria-label="View on Google Scholar"
+                        >
+                          <GraduationCap className="w-4 h-4 text-blue-400" />
                         </a>
                       )}
 
@@ -275,7 +297,7 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
                           href={pub.links.code}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 text-slate-400 hover:text-white transition-colors"
+                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-colors inline-flex items-center justify-center"
                           title="View Repository"
                         >
                           <Github className="w-4 h-4" />
@@ -285,25 +307,51 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
 
                   </div>
 
-                  {/* Abstract Toggle */}
-                  {pub.abstract && (
+                  {/* Abstract & BibTeX Toggle */}
+                  {(pub.abstract || pub.bibtex) && (
                     <div className="mt-4 pt-3 border-t border-white/5">
-                      <button
-                        onClick={() => toggleDetails(pub.id)}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
-                      >
-                        <span>{isExpanded ? 'Hide Abstract' : 'Read Abstract'}</span>
-                        {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => toggleDetails(pub.id)}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                        >
+                          <span>{isExpanded ? 'Hide Abstract & BibTeX' : 'Read Abstract & BibTeX'}</span>
+                          {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
 
                       {isExpanded && (
-                        <div className="mt-3 p-4 rounded-xl bg-[#090C16] border border-white/10 text-xs text-slate-300 leading-relaxed font-sans animate-in fade-in duration-200">
-                          <p className="font-semibold text-[11px] text-amber-300 uppercase tracking-wider mb-1.5">
-                            Abstract
-                          </p>
-                          <p className="text-slate-300 font-normal">
-                            {pub.abstract}
-                          </p>
+                        <div className="mt-3 space-y-3 animate-in fade-in duration-200">
+                          {pub.abstract && (
+                            <div className="p-4 rounded-xl bg-[#090C16] border border-white/10 text-xs text-slate-300 leading-relaxed font-sans">
+                              <p className="font-semibold text-[11px] text-amber-300 uppercase tracking-wider mb-1.5">
+                                Abstract
+                              </p>
+                              <p className="text-slate-300 font-normal">
+                                {pub.abstract}
+                              </p>
+                            </div>
+                          )}
+
+                          {pub.bibtex && (
+                            <div className="p-3.5 rounded-xl bg-[#090C16] border border-white/10 text-xs text-slate-300 font-mono">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="font-sans font-semibold text-[11px] text-amber-300 uppercase tracking-wider">
+                                  BibTeX
+                                </span>
+                                <button
+                                  onClick={() => handleCopyCitation(pub)}
+                                  className="text-[11px] text-amber-400 hover:underline flex items-center gap-1"
+                                >
+                                  <Copy className="w-3 h-3" />
+                                  <span>{isCopied ? 'Copied' : 'Copy'}</span>
+                                </button>
+                              </div>
+                              <pre className="overflow-x-auto text-[11px] text-slate-300 whitespace-pre-wrap leading-relaxed">
+                                {pub.bibtex}
+                              </pre>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
