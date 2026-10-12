@@ -249,4 +249,244 @@ html.light .rounded-full[class*="bg-[#07080D]"] {
   background-color: #ffffff !important;
 }
 
+/* ==========================================================================
+   CV PRINTING & PDF EXPORT STYLES
+   Produces pristine, multi-page, high-contrast academic CV printouts
+   ========================================================================== */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 12mm 15mm 12mm 15mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* When CV is open during print, hide underlying website UI */
+  body.cv-modal-active header,
+  body.cv-modal-active #main-content,
+  body.cv-modal-active footer,
+  body.cv-modal-active .toast-container,
+  body.cv-modal-active .contact-modal-overlay,
+  .print-hidden,
+  .print\:hidden,
+  .cv-modal-backdrop,
+  .cv-modal-toolbar {
+    display: none !important;
+  }
+
+  /* Reset outer application containers */
+  body.cv-modal-active #root,
+  body.cv-modal-active #root > div {
+    background: #ffffff !important;
+    color: #111827 !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  /* Transform the fixed modal overlay into a continuous, static paper document */
+  body.cv-modal-active .cv-modal-overlay {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Clean academic sheet container */
+  body.cv-modal-active .cv-modal-container {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  /* Universal print resets inside the CV sheet */
+  .cv-modal-container * {
+    color: #111827 !important;
+    background-color: transparent !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Header / Name */
+  .cv-modal-container .cv-header-name {
+    color: #000000 !important;
+    font-size: 22pt !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 2pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .cv-modal-container .cv-header-title {
+    color: #374151 !important;
+    font-size: 10pt !important;
+    font-weight: 600 !important;
+    margin-bottom: 4pt !important;
+  }
+
+  /* Contact details row */
+  .cv-modal-container .cv-contact-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10pt !important;
+    font-size: 8.5pt !important;
+    color: #374151 !important;
+    padding-top: 3pt !important;
+    padding-bottom: 6pt !important;
+    border-bottom: 1.5px solid #0f172a !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .cv-modal-container .cv-contact-bar * {
+    color: #374151 !important;
+  }
+
+  .cv-modal-container .cv-contact-item svg {
+    color: #4b5563 !important;
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  /* Section Headings */
+  .cv-modal-container .cv-section {
+    border-top: none !important;
+    padding-top: 2pt !important;
+    margin-top: 8pt !important;
+  }
+
+  .cv-modal-container .cv-section-heading {
+    color: #0f172a !important;
+    font-size: 10.5pt !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 1.5px solid #0f172a !important;
+    padding-bottom: 2pt !important;
+    margin-top: 10pt !important;
+    margin-bottom: 6pt !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    display: block !important;
+  }
+
+  /* Entries: Never split in the middle across a page break */
+  .cv-modal-container .cv-print-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 7pt !important;
+  }
+
+  /* Items typography */
+  .cv-modal-container .cv-item-title {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    font-size: 9.5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  .cv-modal-container .cv-item-venue {
+    color: #047857 !important; /* Crisp dark emerald for venue */
+    font-weight: 700 !important;
+    font-size: 8.5pt !important;
+    font-family: Arial, sans-serif !important;
+  }
+
+  .cv-modal-container .cv-item-date {
+    color: #4b5563 !important;
+    font-size: 8.5pt !important;
+    font-weight: 600 !important;
+  }
+
+  .cv-modal-container .cv-item-award {
+    color: #b45309 !important; /* Bold rich bronze / amber */
+    font-weight: 700 !important;
+    font-size: 8.5pt !important;
+  }
+
+  .cv-modal-container .cv-item-authors {
+    color: #374151 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  .cv-modal-container .cv-author-me {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    text-decoration: underline !important;
+  }
+
+  .cv-modal-container .cv-item-bullet {
+    color: #374151 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  .cv-modal-container .cv-talk-card {
+    border: none !important;
+    border-left: 2px solid #cbd5e1 !important;
+    padding-left: 6pt !important;
+    padding-top: 1pt !important;
+    padding-bottom: 1pt !important;
+    margin-bottom: 5pt !important;
+    background: transparent !important;
+  }
+
+  .cv-modal-container .cv-talk-announcement {
+    color: #1d4ed8 !important;
+    text-decoration: underline !important;
+    font-size: 8pt !important;
+    font-weight: 600 !important;
+  }
+
+  .cv-modal-container .cv-print-note {
+    color: #64748b !important;
+    font-size: 8pt !important;
+  }
+}
+
+
 

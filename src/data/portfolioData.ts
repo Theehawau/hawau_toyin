@@ -328,7 +328,6 @@ export const ALL_PUBLICATIONS: Publication[] = [
     links: {
       paper: "https://www.isca-archive.org/interspeech_2025/valente25_interspeech.pdf",
       dataset: "https://github.com/mbzuai-nlp/CASA/tree/main",
-      project: "https://theehawau.github.io/stutterbank/",
     },
     bibtex: `@inproceedings{valente25_interspeech,
   title     = {{Clinical Annotations for Automatic Stuttering Severity Assessment}},
@@ -823,7 +822,7 @@ export const EXPERIENCE: ExperienceItem[] = [
 
 export const LEADERSHIP_VOLUNTEERING: LeadershipItem[] = [
   {
-    period: "Mar 2025 - present",
+    period: "Mar 2025 - 2026",
     role: "Program Committee",
     organization: "Speakable 2026 (Co-located with LREC)",
     detail: "Reviewing speech accessibility and assistive speech technology research"

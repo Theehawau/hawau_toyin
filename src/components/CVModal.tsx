@@ -13,20 +13,54 @@ export const CVModal: React.FC<CVModalProps> = ({ isOpen, onClose, onShowToast }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
+
+    const handleBeforePrint = () => {
+      document.body.classList.add('cv-modal-active');
+      document.body.style.overflow = 'visible';
+    };
+
+    const handleAfterPrint = () => {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('cv-modal-active');
       window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('beforeprint', handleBeforePrint);
+      window.addEventListener('afterprint', handleAfterPrint);
     }
     return () => {
       document.body.style.overflow = 'unset';
+      document.body.classList.remove('cv-modal-active');
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('beforeprint', handleBeforePrint);
+      window.removeEventListener('afterprint', handleAfterPrint);
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   const handlePrint = () => {
-    window.print();
+    onShowToast("Opening print dialog. Select 'Save as PDF' to save a PDF copy.");
+    document.body.classList.add('cv-modal-active');
+    
+    // Clear overflow restriction so the browser print engine paginates all content
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'visible';
+
+    setTimeout(() => {
+      window.focus();
+      window.print();
+      
+      setTimeout(() => {
+        if (isOpen) {
+          document.body.style.overflow = originalOverflow || 'hidden';
+        }
+      }, 800);
+    }, 60);
   };
 
   const handleDownload = () => {
@@ -73,16 +107,16 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="cv-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
       
       {/* Backdrop */}
-      <div className="fixed inset-0" onClick={onClose} />
+      <div className="cv-modal-backdrop fixed inset-0 print:hidden" onClick={onClose} />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-2xl border border-white/15 bg-[#0C0E17] shadow-2xl z-10 p-6 sm:p-10 space-y-8 text-slate-200">
+      <div className="cv-modal-container relative w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-2xl border border-white/15 bg-[#0C0E17] shadow-2xl z-10 p-6 sm:p-10 space-y-8 text-slate-200">
         
         {/* Controls Toolbar */}
-        <div className="flex items-center justify-between pb-6 border-b border-white/10">
+        <div className="cv-modal-toolbar print:hidden flex items-center justify-between pb-6 border-b border-white/10">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono text-amber-400 font-semibold uppercase tracking-wider">
               Curriculum Vitae
@@ -93,7 +127,7 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownload}
-              className="px-3 py-1.5 text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg inline-flex items-center gap-1.5 transition-colors"
+              className="px-3 py-1.5 text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg inline-flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-amber-400" />
               <span>Download Text</span>
@@ -101,15 +135,16 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
 
             <button
               onClick={handlePrint}
-              className="hidden sm:inline-flex px-3 py-1.5 text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg items-center gap-1.5 transition-colors"
+              title="Print or Save as PDF"
+              className="inline-flex px-3 py-1.5 text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg items-center gap-1.5 transition-colors cursor-pointer"
             >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print</span>
+              <Printer className="w-3.5 h-3.5 text-amber-400" />
+              <span>Print / Save PDF</span>
             </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 border border-white/10 transition-colors ml-2"
+              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 border border-white/10 transition-colors ml-2 cursor-pointer"
               aria-label="Close CV"
             >
               <X className="w-5 h-5" />
@@ -117,80 +152,85 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
           </div>
         </div>
 
-        {/* CV Document Header (from CV page 1) */}
-        <div className="space-y-3">
+        {/* CV Document Header */}
+        <div className="space-y-2 cv-header-block">
           <h1
-            className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight"
+            className="cv-header-name text-3xl sm:text-4xl font-extrabold text-white tracking-tight"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             {PROFILE.name}
           </h1>
+          <p className="cv-header-title text-sm font-medium text-amber-400/95">
+            {PROFILE.title} · {PROFILE.institution}
+          </p>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 pt-1">
-            <div className="flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-amber-400" />
+          <div className="cv-contact-bar flex flex-wrap items-center gap-4 text-xs text-slate-300 pt-1">
+            <div className="cv-contact-item flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span className="font-mono">{PROFILE.email}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-amber-400" />
+            <div className="cv-contact-item flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span>{PROFILE.phone}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-amber-400" />
+            <div className="cv-contact-item flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <a href={PROFILE.website} target="_blank" rel="noreferrer" className="hover:underline">
                 theehawau.github.io
               </a>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Linkedin className="w-3.5 h-3.5 text-blue-400" />
+            <div className="cv-contact-item flex items-center gap-1.5">
+              <Linkedin className="w-3.5 h-3.5 text-blue-400 shrink-0" />
               <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" className="hover:underline">
                 toyinhawau
               </a>
             </div>
-            <div className="flex items-center gap-1.5">
-              <GraduationCap className="w-3.5 h-3.5 text-amber-400" />
-              <span>Google Scholar</span>
+            <div className="cv-contact-item flex items-center gap-1.5">
+              <GraduationCap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <a href={PROFILE.scholar} target="_blank" rel="noreferrer" className="hover:underline">
+                Google Scholar
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Research Interest (from CV page 1) */}
-        <div className="space-y-2 border-t border-white/10 pt-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+        {/* Research Interest */}
+        <div className="cv-section space-y-2 border-t border-white/10 pt-4">
+          <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
             Research Interest
           </h2>
           <p className="text-xs text-slate-300">
             {PROFILE.researchInterests.join('; ')}
           </p>
           <p className="text-xs text-slate-400">
-            <strong className="text-slate-300">Languages: </strong>
+            <strong className="text-slate-300 font-semibold">Languages: </strong>
             {PROFILE.languages.map(l => `${l.language} (${l.proficiency})`).join(', ')}
           </p>
         </div>
 
-        {/* List of Publications (from CV page 1) */}
-        <div className="space-y-4 border-t border-white/10 pt-4">
+        {/* List of Publications */}
+        <div className="cv-section space-y-4 border-t border-white/10 pt-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+            <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
               List of Publications
             </h2>
-            <span className="text-[11px] text-slate-400 italic">* - equal contribution</span>
+            <span className="cv-print-note text-[11px] text-slate-400 italic">* - equal contribution</span>
           </div>
           <div className="space-y-4 text-xs">
             {ALL_PUBLICATIONS.map((pub, idx) => (
-              <div key={idx} className="space-y-1">
+              <div key={idx} className="cv-print-item space-y-1">
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-semibold text-white">
-                  <span className="text-sm font-bold text-slate-100">{pub.title}</span>
-                  <span className="text-amber-400 font-mono text-xs">{pub.venue}</span>
+                  <span className="cv-item-title text-sm font-bold text-slate-100">{pub.title}</span>
+                  <span className="cv-item-venue text-amber-400 font-mono text-xs shrink-0 sm:ml-4">{pub.venue} {pub.year}</span>
                 </div>
                 {pub.award && (
-                  <p className="text-[11px] font-bold text-amber-300">
+                  <p className="cv-item-award text-[11px] font-bold text-amber-300">
                     ★ {pub.award}
                   </p>
                 )}
-                <p className="text-slate-400">
+                <p className="cv-item-authors text-slate-400">
                   {pub.authors.map((a, i) => (
-                    <span key={i} className={a.includes('Hawau') ? 'text-white font-semibold underline' : ''}>
+                    <span key={i} className={a.includes('Hawau') ? 'cv-author-me text-white font-semibold underline' : ''}>
                       {a}{i < pub.authors.length - 1 ? ', ' : ''}
                     </span>
                   ))}
@@ -200,35 +240,35 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
           </div>
         </div>
 
-        {/* Shared Tasks (from CV page 1/2) */}
-        <div className="space-y-3 border-t border-white/10 pt-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+        {/* Shared Tasks */}
+        <div className="cv-section space-y-3 border-t border-white/10 pt-4">
+          <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
             Shared Tasks
           </h2>
           <div className="space-y-3 text-xs">
             {SHARED_TASKS.map((st, idx) => (
-              <div key={idx} className="space-y-0.5">
+              <div key={idx} className="cv-print-item space-y-0.5">
                 <div className="flex justify-between font-semibold text-white">
-                  <span>{st.title}</span>
-                  <span className="text-amber-400 font-mono">{st.venue}</span>
+                  <span className="cv-item-title">{st.title}</span>
+                  <span className="cv-item-venue text-amber-400 font-mono shrink-0 ml-4">{st.venue} {st.year}</span>
                 </div>
-                <p className="text-slate-400">{st.authors.join(', ')}</p>
+                <p className="cv-item-authors text-slate-400">{st.authors.join(', ')}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Presented & Upcoming Talks */}
-        <div className="space-y-3 border-t border-white/10 pt-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+        <div className="cv-section space-y-3 border-t border-white/10 pt-4">
+          <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
             Presented & Upcoming Talks
           </h2>
           <div className="space-y-3 text-xs">
             {TALKS_BY_LOCATION.map((loc) => (
-              <div key={loc.id} className="space-y-1.5 p-3 rounded-xl bg-white/5 border border-white/5">
+              <div key={loc.id} className="cv-print-item cv-talk-card space-y-1.5 p-3 rounded-xl bg-white/5 border border-white/5">
                 <div className="flex items-center justify-between text-white font-semibold">
-                  <span className="text-amber-300">{loc.institution}</span>
-                  <span className="text-slate-400 font-normal">{loc.location}</span>
+                  <span className="cv-item-title text-amber-300 font-bold">{loc.institution}</span>
+                  <span className="cv-item-date text-slate-400 font-normal">{loc.location}</span>
                 </div>
                 <div className="space-y-1 pl-2 border-l border-amber-400/40">
                   {loc.talks.map((t, idx) => (
@@ -240,13 +280,13 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
                             href={t.announcementUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-amber-400 hover:text-amber-300 underline font-medium text-[10px]"
+                            className="cv-talk-announcement text-amber-400 hover:text-amber-300 underline font-medium text-[10px]"
                           >
                             [Announcement]
                           </a>
                         )}
                       </div>
-                      <span className="font-mono text-amber-400 font-medium shrink-0 text-[11px]">
+                      <span className="cv-item-venue font-mono text-amber-400 font-medium shrink-0 text-[11px]">
                         {t.isUpcoming ? `Upcoming (${t.date})` : t.date}
                       </span>
                     </div>
@@ -257,46 +297,46 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
           </div>
         </div>
 
-        {/* Education (from CV page 2) */}
-        <div className="space-y-4 border-t border-white/10 pt-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+        {/* Education */}
+        <div className="cv-section space-y-4 border-t border-white/10 pt-4">
+          <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
             Education
           </h2>
           <div className="space-y-3 text-xs">
             {EDUCATION.map((edu, idx) => (
-              <div key={idx} className="space-y-0.5">
+              <div key={idx} className="cv-print-item space-y-0.5">
                 <div className="flex justify-between font-semibold text-white text-sm">
-                  <span>{edu.institution}</span>
-                  <span className="text-amber-400 font-mono text-xs">{edu.period}</span>
+                  <span className="cv-item-title">{edu.institution}</span>
+                  <span className="cv-item-date text-amber-400 font-mono text-xs shrink-0 ml-4">{edu.period}</span>
                 </div>
                 <p className="text-slate-300 font-medium">{edu.degree}</p>
                 {edu.details && (
-                  <p className="text-slate-400 italic">◦ {edu.details}</p>
+                  <p className="cv-item-bullet text-slate-400 italic">◦ {edu.details}</p>
                 )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Experience (from CV page 2) */}
-        <div className="space-y-4 border-t border-white/10 pt-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+        {/* Experience */}
+        <div className="cv-section space-y-4 border-t border-white/10 pt-4">
+          <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
             Experience
           </h2>
           <div className="space-y-4 text-xs">
             {EXPERIENCE.map((exp, idx) => (
-              <div key={idx} className="space-y-1">
+              <div key={idx} className="cv-print-item space-y-1">
                 <div className="flex justify-between font-semibold text-white text-sm">
-                  <span>{exp.role}</span>
-                  <span className="text-slate-400 text-xs">{exp.location}</span>
+                  <span className="cv-item-title">{exp.role}</span>
+                  <span className="cv-item-date text-slate-400 text-xs shrink-0 ml-4">{exp.location}</span>
                 </div>
                 <div className="flex justify-between text-slate-300">
                   <span className="font-medium text-amber-300">{exp.institution}</span>
-                  <span className="font-mono text-amber-400/90">{exp.period}</span>
+                  <span className="cv-item-date font-mono text-amber-400/90 text-xs shrink-0 ml-4">{exp.period}</span>
                 </div>
                 <ul className="list-disc pl-4 space-y-0.5 text-slate-400 pt-0.5">
                   {exp.bullets.map((b, bi) => (
-                    <li key={bi}>{b}</li>
+                    <li key={bi} className="cv-item-bullet">{b}</li>
                   ))}
                 </ul>
               </div>
@@ -304,37 +344,37 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
           </div>
         </div>
 
-        {/* Leadership and Volunteering (from CV page 2) */}
-        <div className="space-y-3 border-t border-white/10 pt-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+        {/* Leadership and Volunteering */}
+        <div className="cv-section space-y-3 border-t border-white/10 pt-4">
+          <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
             Leadership and Volunteering
           </h2>
           <div className="space-y-2 text-xs">
             {LEADERSHIP_VOLUNTEERING.map((lead, idx) => (
-              <div key={idx} className="flex justify-between items-baseline text-slate-300">
+              <div key={idx} className="cv-print-item flex justify-between items-baseline text-slate-300">
                 <div>
-                  <span className="font-semibold text-white">{lead.role}</span>
+                  <span className="cv-item-title font-semibold text-white">{lead.role}</span>
                   <span className="text-slate-400"> — {lead.organization}</span>
                 </div>
-                <span className="font-mono text-amber-400/90 text-xs shrink-0 ml-4">{lead.period}</span>
+                <span className="cv-item-date font-mono text-amber-400/90 text-xs shrink-0 ml-4">{lead.period}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Honors and Awards (from CV page 3) */}
-        <div className="space-y-3 border-t border-white/10 pt-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+        {/* Honors and Awards */}
+        <div className="cv-section space-y-3 border-t border-white/10 pt-4">
+          <h2 className="cv-section-heading text-xs font-bold uppercase tracking-wider text-amber-400">
             Honors and Awards
           </h2>
           <div className="space-y-2 text-xs">
             {HONORS_AND_AWARDS.map((award, idx) => (
-              <div key={idx} className="flex justify-between items-baseline text-slate-300">
+              <div key={idx} className="cv-print-item flex justify-between items-baseline text-slate-300">
                 <div>
-                  <span className="font-semibold text-white">{award.title}</span>
+                  <span className="cv-item-title font-semibold text-white">{award.title}</span>
                   <span className="text-slate-400">, {award.organization}</span>
                 </div>
-                <span className="font-mono text-amber-400/90 text-xs shrink-0 ml-4">{award.year}</span>
+                <span className="cv-item-date font-mono text-amber-400/90 text-xs shrink-0 ml-4">{award.year}</span>
               </div>
             ))}
           </div>
