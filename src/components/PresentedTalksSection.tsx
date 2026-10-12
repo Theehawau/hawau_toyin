@@ -94,10 +94,6 @@ export const PresentedTalksSection: React.FC = () => {
                           )}
                         </div>
                       </div>
-
-                      <div className="text-[11px] text-slate-400 pt-0.5">
-                        <span>{loc.location}</span>
-                      </div>
                     </div>
                   ))}
                 </div>

@@ -34,11 +34,7 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
       bullets: [
         "STTATTS: Unified Speech-to-Text & Text-to-Speech Model (EMNLP 2024)",
         "ArTST: Arabic Text and Speech Transformer (EMNLP Best Paper)",
-        "Are LLMs Good Text Diacritizers? Arabic & Yoruba Case Study (LREC 2026)",
-        "Evaluating LMMs on Culturally Diverse 100 Languages (CVPR 2025)",
-        "Evaluating LLM Performance on African Languages (ACL 2025)",
-        "Dialectal Coverage and Generalization in Arabic ASR (ACL 2025)",
-        "Infant Cry Detection Using Causal Temporal Representation (ICASSP 2025)"
+        "Evaluating LLM Performance on African Languages (ACL 2025)"
       ]
     },
     {
@@ -62,9 +58,6 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest">
-              Core Inquiry
-            </p>
             <h2
               className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1"
               style={{ fontFamily: 'var(--font-display)' }}
@@ -72,9 +65,6 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
               Research Interests
             </h2>
           </div>
-          <p className="text-sm text-slate-400 max-w-md">
-            Organized across three foundational programs spanning atypical speech, unified multilingual acoustic & NLP architectures, and data curation.
-          </p>
         </div>
 
         {/* 3 Research Pillars Grid */}

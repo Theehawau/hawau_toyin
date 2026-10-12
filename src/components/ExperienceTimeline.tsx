@@ -12,9 +12,6 @@ export const ExperienceTimeline: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
           <div>
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest">
-              Career, Education & Leadership (from CV)
-            </p>
             <h2
               className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1"
               style={{ fontFamily: 'var(--font-display)' }}

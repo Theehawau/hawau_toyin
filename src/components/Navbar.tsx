@@ -38,27 +38,27 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-[#090A0F]/90 backdrop-blur-md border-b border-white/10 shadow-lg shadow-black/20'
-          : 'bg-transparent border-b border-white/5'
+          ? 'bg-white/90 dark:bg-[#090A0F]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 shadow-lg shadow-black/5 dark:shadow-black/20'
+          : 'bg-transparent border-b border-slate-200/60 dark:border-white/5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Zone 1: Single text element Brand wordmark */}
         <a
           href="#"
-          className="text-lg font-bold tracking-tight text-white hover:text-amber-400 transition-colors whitespace-nowrap"
+          className="text-lg font-bold tracking-tight text-slate-900 dark:text-white hover:text-amber-500 dark:hover:text-amber-400 transition-colors whitespace-nowrap"
           style={{ fontFamily: 'var(--font-display)' }}
         >
           {PROFILE.shortName}
         </a>
 
         {/* Zone 2: Clean 4-6 text navigation links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600 dark:text-slate-300">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="hover:text-amber-400 transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1.5px] after:bg-amber-400 hover:after:w-full after:transition-all"
+              className="hover:text-amber-500 dark:hover:text-amber-400 transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1.5px] after:bg-amber-400 hover:after:w-full after:transition-all"
             >
               {link.name}
             </a>
@@ -70,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Dark / Light Toggle */}
           <button
             onClick={onToggleTheme}
-            className="p-2 rounded-lg text-slate-300 hover:text-amber-400 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+            className="p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:text-amber-500 dark:hover:text-amber-400 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 transition-colors"
             title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             aria-label="Toggle theme"
           >
@@ -83,9 +83,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={onOpenCV}
-            className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors whitespace-nowrap"
+            className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg transition-colors whitespace-nowrap"
           >
-            <FileText className="w-3.5 h-3.5 text-amber-400" />
+            <FileText className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
             Curriculum Vitae
           </button>
           <button
@@ -98,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 text-slate-400 hover:text-white"
+            className="md:hidden p-1.5 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -108,12 +108,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0D0F18] border-b border-white/10 px-6 py-4 space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-white/10">
-            <span className="text-xs text-slate-400">Theme</span>
+        <div className="md:hidden bg-white dark:bg-[#0D0F18] border-b border-slate-200 dark:border-white/10 px-6 py-4 space-y-3 shadow-lg">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
+            <span className="text-xs text-slate-600 dark:text-slate-400">Theme</span>
             <button
               onClick={onToggleTheme}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-200 bg-white/5 border border-white/10 rounded-md"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-md"
             >
               {theme === 'dark' ? (
                 <>
@@ -133,18 +133,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               key={link.name}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-medium text-slate-300 hover:text-amber-400 py-1"
+              className="block text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-amber-500 dark:hover:text-amber-400 py-1"
             >
               {link.name}
             </a>
           ))}
-          <div className="pt-2 border-t border-white/10 flex gap-2">
+          <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex gap-2">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenCV();
               }}
-              className="flex-1 py-2 text-center text-xs font-semibold text-slate-200 bg-white/5 border border-white/10 rounded-lg"
+              className="flex-1 py-2 text-center text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg"
             >
               Curriculum Vitae
             </button>

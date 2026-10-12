@@ -33,6 +33,7 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
 
   const filterTabs = [
     { id: 'all', label: `All Publications (${ALL_PUBLICATIONS.length})` },
+    { id: 'stuttered-speech', label: 'AI for Stuttered Speech' },
     { id: 'speech-multilingual-nlp', label: 'Speech Recognition, Generation & Multimodal NLP' },
     { id: 'data-curation', label: 'Data Curation & Annotation' }
   ];

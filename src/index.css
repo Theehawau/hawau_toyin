@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-display: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-sans: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -18,6 +20,22 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, .font-display {
 ::selection {
   background-color: #f59e0b;
   color: #000000;
+}
+
+/* Base Dark Mode Root Styling */
+html.dark,
+html.dark body,
+html.dark #root,
+html.dark #root > div,
+html.dark main,
+html.dark section#hero {
+  background-color: #090A0F !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark header.scrolled,
+html.dark header {
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Light Mode Overrides */

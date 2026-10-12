@@ -17,9 +17,6 @@ export const AchievementsSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest">
-              Recognition & Distinctions (from CV)
-            </p>
             <h2
               className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1"
               style={{ fontFamily: 'var(--font-display)' }}

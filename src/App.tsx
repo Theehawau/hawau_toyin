@@ -18,7 +18,19 @@ import { Toast } from './components/Toast';
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    return (localStorage.getItem('portfolio_theme') as 'dark' | 'light') || 'dark';
+    try {
+      // Ensure light mode is the clean default setting
+      if (localStorage.getItem('portfolio_theme_version') !== '2') {
+        localStorage.removeItem('portfolio_theme');
+        localStorage.setItem('portfolio_theme_version', '2');
+        localStorage.setItem('portfolio_theme', 'light');
+        return 'light';
+      }
+      const saved = localStorage.getItem('portfolio_theme');
+      return saved === 'dark' ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
   });
   const [cvModalOpen, setCvModalOpen] = useState<boolean>(false);
   const [contactModalOpen, setContactModalOpen] = useState<boolean>(false);
@@ -33,7 +45,9 @@ export default function App() {
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light');
     }
-    localStorage.setItem('portfolio_theme', theme);
+    try {
+      localStorage.setItem('portfolio_theme', theme);
+    } catch {}
   }, [theme]);
 
   const toggleTheme = () => {
@@ -57,7 +71,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090A0F] text-slate-100 selection:bg-amber-400 selection:text-black transition-colors duration-200">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090A0F] text-slate-900 dark:text-slate-100 selection:bg-amber-400 selection:text-black transition-colors duration-200">
       {/* Navigation Top Bar Contract */}
       <Navbar
         theme={theme}
