@@ -327,6 +327,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     abstract: "Standardized clinical assessment of stuttering severity—such as the Stuttering Severity Instrument (SSI-4)—depends upon detailed acoustic labeling of stuttering events including repetitions, prolongations, and postural fixations. We introduce a dataset of expert clinical annotations for automatic stuttering severity assessment, providing validated acoustic baselines to train neural architectures capable of automated severity profiling and clinical progress monitoring.",
     links: {
       paper: "https://www.isca-archive.org/interspeech_2025/valente25_interspeech.pdf",
+      dataset: "https://github.com/mbzuai-nlp/CASA/tree/main",
       project: "https://theehawau.github.io/stutterbank/",
     },
     bibtex: `@inproceedings{valente25_interspeech,
@@ -750,6 +751,15 @@ export const EXPERIENCE: ExperienceItem[] = [
     bullets: [
       "Facilitate high-impact 'AI for Business Brainstorming' immersion workshops for UAE government officials, C-suite executives, and organizational transformation leaders",
       "Guide executive cohorts through strategic AI roadmaps, multimodal applications, and generative AI enterprise problem solving",
+    ]
+  },
+  {
+    period: "June 2026 – August 2026",
+    role: "Visiting Researcher",
+    institution: "CUHK-Sz & SLAI",
+    location: "Shenzhen, China",
+    bullets: [
+      "Worked on Multilingual Stutter Detection (under review)"
     ]
   },
   {
