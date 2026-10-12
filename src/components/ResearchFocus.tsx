@@ -19,34 +19,31 @@ export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) =
         url: "https://theehawau.github.io/stutterbank/"
       },
       bullets: [
-        "Aligning Stuttered-Speech Research with End-User Needs (Interspeech 2026)",
-        "What Counts as an Error? Dual-Reference Benchmarking (Interspeech 2026)",
+        "Aligning Stuttered-Speech Research with End-User Needs",
+        "What Counts as an Error? Dual-Reference Benchmarking",
         "Clinical Annotations for Automatic Stuttering Severity Assessment",
-        "StutterBank Open Research Resource"
       ]
     },
     {
       id: "multilingual-speech-nlp",
-      title: "Speech Recognition, Generation & Multimodal NLP",
+      title: "Speech Recognition, Multilingual & Multimodal NLP",
       icon: <Radio className="w-5 h-5 text-indigo-400" />,
       shortDesc: "Architecting unified multi-task speech-to-text & text-to-speech transformers, foundational multilingual representations, parameter-efficient LLM diacritizers, and auditing vision-language systems across 100 languages.",
       award: "Best Paper Award (ArabicNLP @ EMNLP 2023 for ArTST)",
       bullets: [
-        "STTATTS: Unified Speech-to-Text & Text-to-Speech Model (EMNLP 2024)",
-        "ArTST: Arabic Text and Speech Transformer (EMNLP Best Paper)",
-        "Evaluating LLM Performance on African Languages (ACL 2025)"
+        "STTATTS: Unified Speech-to-Text & Text-to-Speech Model",
+        "ArTST: Arabic Text and Speech Transformer",
       ]
     },
     {
       id: "data-curation",
-      title: "Data Curation & Annotation",
+      title: "Data Curation",
       icon: <Database className="w-5 h-5 text-emerald-400" />,
       shortDesc: "Curating specialized speech datasets, clinical acoustic disfluency taxonomies, historical language retrieval benchmarks, and multidialectal evaluation corpora.",
       bullets: [
-        "ArVoice: Multi-Speaker Dataset for Arabic Speech Synthesis (Interspeech 2025)",
-        "Gretino: Greek & Latin Classical Language Dataset (LREC 2026)",
-        "PolyWER Code-Switched Transliteration & Translation Annotations",
-        "NADI & Iqra’Eval Arabic Speech Shared Tasks (ArabicNLP 2025)"
+        "ArVoice: Multi-Speaker Dataset for Arabic Speech Synthesis",
+        "Gretino: Greek & Latin Classical Language Dataset",
+        "All languages matter: Evaluating lmms on culturally diverse 100 languages"
       ]
     }
   ];

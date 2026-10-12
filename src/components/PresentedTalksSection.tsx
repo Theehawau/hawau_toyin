@@ -50,13 +50,9 @@ export const PresentedTalksSection: React.FC = () => {
                     </div>
                   </div>
 
-                  {loc.isUpcoming ? (
+                  {loc.isUpcoming && (
                     <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md shrink-0">
                       Upcoming
-                    </span>
-                  ) : (
-                    <span className="text-[11px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5 shrink-0">
-                      {loc.talks.length} {loc.talks.length === 1 ? 'Talk' : 'Talks'}
                     </span>
                   )}
                 </div>
@@ -73,7 +69,7 @@ export const PresentedTalksSection: React.FC = () => {
                           {talk.title}
                         </h4>
                         
-                        <div className="flex items-center justify-between pt-1">
+                        <div className="flex items-center justify-between pt-1 gap-2 flex-wrap">
                           <span className="font-mono text-xs text-amber-400 tabular-nums font-medium flex items-center gap-1.5">
                             {talk.isUpcoming && (
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -81,17 +77,30 @@ export const PresentedTalksSection: React.FC = () => {
                             {talk.date}
                           </span>
 
-                          {talk.paperUrl && (
-                            <a
-                              href={talk.paperUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-amber-400 hover:text-amber-300 transition-colors inline-flex items-center gap-1 text-[11px] font-medium"
-                            >
-                              <span>Paper</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {talk.announcementUrl && (
+                              <a
+                                href={talk.announcementUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-amber-400 hover:text-amber-300 transition-colors inline-flex items-center gap-1 text-[11px] font-semibold bg-amber-400/10 hover:bg-amber-400/20 px-2 py-0.5 rounded-md border border-amber-400/20"
+                              >
+                                <span>Talk Announcement</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                            {talk.paperUrl && (
+                              <a
+                                href={talk.paperUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-slate-400 hover:text-slate-200 transition-colors inline-flex items-center gap-1 text-[11px] font-medium"
+                              >
+                                <span>Paper</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>

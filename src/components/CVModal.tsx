@@ -87,7 +87,7 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
             <span className="text-xs font-mono text-amber-400 font-semibold uppercase tracking-wider">
               Curriculum Vitae
             </span>
-            <span className="text-xs text-slate-400">· Official Academic Record</span>
+            <span className="text-xs text-slate-400">· Academic Record</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -233,7 +233,19 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
                 <div className="space-y-1 pl-2 border-l border-amber-400/40">
                   {loc.talks.map((t, idx) => (
                     <div key={idx} className="flex justify-between items-baseline gap-2">
-                      <span className="text-slate-200">{t.title}</span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-slate-200">{t.title}</span>
+                        {t.announcementUrl && (
+                          <a
+                            href={t.announcementUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-amber-400 hover:text-amber-300 underline font-medium text-[10px]"
+                          >
+                            [Announcement]
+                          </a>
+                        )}
+                      </div>
                       <span className="font-mono text-amber-400 font-medium shrink-0 text-[11px]">
                         {t.isUpcoming ? `Upcoming (${t.date})` : t.date}
                       </span>

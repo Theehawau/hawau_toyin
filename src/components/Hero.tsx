@@ -264,7 +264,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                       Speech Pathology Australia Best Paper Award
                     </p>
                     <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
-                      Aligning Stuttered-Speech Research with End-User and Clinical Needs.
+                      Aligning Stuttered-Speech Research with End-User Needs.
                     </p>
                   </div>
                   <a
@@ -289,21 +289,32 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                       <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-[9px] font-semibold">Oct 13, 2026</span>
                     </div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5 leading-snug">
-                      STTATTS: Speech-to-Text & Text-to-Speech
+                      Efficient Joint Crossmodal Language Modeling
                     </p>
                     <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                       Alexandria University · Alexandria, Egypt
                     </p>
                   </div>
-                  <a
-                    href="https://arxiv.org/abs/2410.18607"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-500 dark:hover:text-indigo-200 transition-colors mt-2.5 pt-1"
-                  >
-                    <span>Paper & Abstract Details</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                  <div className="flex items-center gap-3 mt-2.5 pt-1">
+                    <a
+                      href="https://lnkd.in/p/gzNc7vrw"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-500 dark:hover:text-indigo-200 transition-colors"
+                    >
+                      <span>Talk Announcement</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                    <a
+                      href="https://arxiv.org/abs/2410.18607"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                    >
+                      <span>Paper</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
