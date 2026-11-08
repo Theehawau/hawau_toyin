@@ -305,6 +305,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                     <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5 leading-snug">
                       {featuredTalk.title}
                     </p>
+                    {featuredTalk.role && (
+                      <p className="text-[11px] font-medium text-indigo-600 dark:text-indigo-300 mt-0.5 leading-snug">
+                        {featuredTalk.role}
+                      </p>
+                    )}
                     <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                       {featuredTalk.institution} · {featuredTalk.location}
                     </p>

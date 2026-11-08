@@ -84,7 +84,7 @@ SHARED TASKS:
 ${SHARED_TASKS.map(s => `• ${s.title}\n  ${s.authors.join(', ')}\n  ${s.venue} (${s.year})`).join('\n\n')}
 
 PRESENTED & UPCOMING TALKS:
-${TALKS_BY_LOCATION.map(g => `${g.institution} (${g.location}):\n` + g.talks.map(t => `  • ${t.title} [${t.date}]`).join('\n')).join('\n\n')}
+${TALKS_BY_LOCATION.map(g => `${g.institution} (${g.location}):\n` + g.talks.map(t => `  • ${t.title}${t.role ? ` — ${t.role}` : ''} [${t.date}]`).join('\n')).join('\n\n')}
 
 EDUCATION:
 ${EDUCATION.map(e => `• ${e.institution}\n  ${e.degree} (${e.period})\n  ${e.details || ''}`).join('\n\n')}
@@ -275,6 +275,9 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
                     <div key={idx} className="flex justify-between items-baseline gap-2">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-slate-200">{t.title}</span>
+                        {t.role && (
+                          <span className="text-slate-400 text-[11px]">({t.role})</span>
+                        )}
                         {t.announcementUrl && (
                           <a
                             href={t.announcementUrl}

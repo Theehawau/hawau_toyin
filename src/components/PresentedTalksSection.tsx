@@ -78,6 +78,11 @@ export const PresentedTalksSection: React.FC = () => {
                         <h4 className="text-xs sm:text-sm font-semibold text-white group-hover:text-amber-300 leading-snug">
                           {talk.title}
                         </h4>
+                        {talk.role && (
+                          <p className="text-[11px] text-slate-400 leading-snug">
+                            {talk.role}
+                          </p>
+                        )}
                         
                         <div className="flex items-center justify-between pt-1 gap-2 flex-wrap">
                           <span className="font-mono text-xs text-amber-400 tabular-nums font-medium flex items-center gap-1.5">

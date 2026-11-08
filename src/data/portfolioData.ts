@@ -25,6 +25,8 @@ export interface Publication {
 
 export interface Talk {
   title: string;
+  /** Optional role or session context, e.g. "Session 1 Speaker & Panelist". */
+  role?: string;
   /** Human-readable date shown on the site, e.g. "October 13, 2026" or "April 2025". */
   date: string;
   /** Machine-readable date (YYYY-MM-DD) used to decide whether a talk is upcoming or past. */
@@ -650,6 +652,21 @@ export const ALL_PUBLICATIONS: Publication[] = [
 ];
 
 export const TALKS_BY_LOCATION: LocationTalkGroup[] = [
+  {
+    id: "apsipa-2026",
+    institution: "APSIPA ASC 2026 Winter School (KMITL)",
+    location: "Bangkok, Thailand",
+    announcementUrl: "https://apsipa2026.org/school.html#school1",
+    talks: [
+      {
+        title: "Speech Technology for Pathological Speech: Landscape, Case Study and Way Forward",
+        role: "Session 1 Speaker & Panelist · Winter School on Trustworthy Speech Foundation Models and LLM-Augmented Modeling for Pathological Speech",
+        date: "November 9, 2026",
+        isoDate: "2026-11-09",
+        announcementUrl: "https://apsipa2026.org/school.html#school1"
+      }
+    ]
+  },
   {
     id: "alexandria-uni",
     institution: "Alexandria University",
