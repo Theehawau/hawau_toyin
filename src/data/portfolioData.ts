@@ -23,20 +23,33 @@ export interface Publication {
   bibtex?: string;
 }
 
+export interface Talk {
+  title: string;
+  /** Human-readable date shown on the site, e.g. "October 13, 2026" or "April 2025". */
+  date: string;
+  /** Machine-readable date (YYYY-MM-DD) used to decide whether a talk is upcoming or past. */
+  isoDate: string;
+  paperUrl?: string;
+  announcementUrl?: string;
+}
+
 export interface LocationTalkGroup {
   id: string;
   institution: string;
   location: string;
-  isUpcoming?: boolean;
   announcementUrl?: string;
-  talks: {
-    title: string;
-    date: string;
-    isUpcoming?: boolean;
-    paperUrl?: string;
-    announcementUrl?: string;
-  }[];
+  talks: Talk[];
 }
+
+/** True if the talk takes place today or later (compared by calendar day). */
+export const isTalkUpcoming = (talk: Talk, now: Date = new Date()): boolean => {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const [y, m, d] = talk.isoDate.split('-').map(Number);
+  return new Date(y, m - 1, d) >= today;
+};
+
+export const isGroupUpcoming = (group: LocationTalkGroup, now: Date = new Date()): boolean =>
+  group.talks.some((t) => isTalkUpcoming(t, now));
 
 export interface SharedTask {
   id: string;
@@ -113,7 +126,6 @@ export const PROFILE = {
   institution: "Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI)",
   department: "Department of Natural Language Processing",
   location: "Abu Dhabi, UAE",
-  phone: "0568219615",
   email: "hawau.toyin@mbzuai.ac.ae",
   secondaryEmail: "hawau.olamide.TH@gmail.com",
   github: "https://github.com/Theehawau",
@@ -189,7 +201,7 @@ export const PROJECTS: Project[] = [
     ],
     techStack: ["PyTorch", "Transformers", "Speech-to-Text", "Text-to-Speech", "Task Fusion MLP"],
     links: {
-      github: "https://github.com/Theehawau",
+      github: "https://github.com/mbzuai-nlp/sttatts",
       paper: "https://arxiv.org/abs/2410.18607"
     }
   },
@@ -225,19 +237,19 @@ export const PROJECTS: Project[] = [
     period: "2026",
     category: "AI for Stuttered Speech",
     originalFigure: "/src/assets/images/original_papers/dualref_benchmarking.png",
-    figureCaption: "Figure 1 from original paper: Intended vs Verbatim specialization of high performance ASR models evaluated on stuttered speech (Under Review / arXiv:2606.31112).",
+    figureCaption: "Figure 1 from original paper: Intended vs Verbatim specialization of high performance ASR models evaluated on stuttered speech (Interspeech 2026).",
     description: "Pioneering benchmarking framework that decouples verbatim disfluency transcriptions from intended speaker targets to accurately evaluate ASR on atypical stuttered speech.",
     fullOverview: "Atypical speech, such as stuttering, has historically suffered from flawed ASR evaluations where disfluencies are conflated into a single ambiguous ground truth. This paper benchmarks 11 ASR architectures (encoder-decoder, CTC, and transducer) on atypical speech across both verbatim (clinical) and intended (assistive) references, revealing that model rankings shift dramatically depending on the transcription goal.",
     highlights: [
       "Solidifies the dual-reference evaluation standard (Verbatim vs Intended) for atypical ASR",
       "Benchmarks 11 modern ASR architectures on stuttered speech cohorts",
       "Demonstrates model ranking inversions when evaluating for assistive vs clinical use cases",
-      "Under review for top speech conference (arXiv:2606.31112)"
+      "Published at Interspeech 2026"
     ],
     techStack: ["Python", "Whisper", "NVIDIA NeMo CTC", "Librosa"],
     links: {
       github: "https://github.com/Theehawau/usecase_asr",
-      paper: "https://arxiv.org/abs/2606.31112"
+      paper: "https://www.isca-archive.org/interspeech_2026/toyin26_interspeech.pdf"
     }
   },
   {
@@ -275,7 +287,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     category: "stuttered-speech",
     award: "Speech Pathology Best Paper Award (Speech Pathology Australia at Interspeech 2026)",
     highlight: "Speech Pathology Best Paper Award · Interspeech 2026",
-    abstract: "Despite advancements in speech recognition and assistive voice technologies, existing models frequently underperform for individuals who stutter due to acoustic variations, prolongations, repetitions, and blocks. We conduct an extensive scoping review and empirical survey involving both people who stutter (PWS) and speech-language pathologists (SLPs). We identify fundamental disconnects between mainstream ASR metrics and real-world communicative or diagnostic needs, establishing evidence-based guidelines and open survey datasets to steer assistive voice AI toward genuine clinical and user alignment.",
+    abstract: "Atypical speech is receiving greater attention in speech technology research, but much of this work unfolds with limited interdisciplinary dialogue. For stuttered speech in particular, it is widely recognised that current speech recognition systems fall short in practice, and current evaluation methods and research priorities are not systematically grounded in end-user experiences and needs. In this work, we analyse these gaps through 1) a scoping review of papers that deal with stuttered speech and 2) a survey of 70 stakeholders, including adults who stutter and speech-language pathologists. By analysing these two perspectives, we propose a taxonomy of stuttered-speech research, identify where current research directions diverge from the needs articulated by stakeholders, and conclude by outlining concrete guidelines and directions towards addressing the real needs of the stuttering community.",
     links: {
       paper: "https://www.isca-archive.org/interspeech_2026/toyin26b_interspeech.pdf",
       project: "https://theehawau.github.io/stutterbank/",
@@ -298,7 +310,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2026,
     category: "stuttered-speech",
     highlight: "Interspeech 2026",
-    abstract: "Automatic speech recognition (ASR) evaluations for atypical speech routinely conflate two fundamentally distinct ground truth targets into a single reference: verbatim transcription (which preserves all disfluencies, crucial for speech-language diagnostics and clinical monitoring) and intended transcription (which removes disfluencies to capture fluent message intent, essential for command-and-control and dictation). Benchmarking 11 modern ASR architectures across encoder-decoder, CTC, and transducer families on stuttered speech, we discover that model performance and rankings invert depending on the transcription target, demonstrating that single-reference evaluation produces deceptive model rankings.",
+    abstract: "ASR systems have been often reported to underperform on atypical speech. An often conflated compounding factor is the existence of two valid transcription references: verbatim (actual produced speech, including repetitions/prolongations) and intended (the canonical form of the text with disfluencies removed) in atypical speech recognition depending on context and use-case. Most ASR evaluations conflate this duality into a single ground truth and reward systems that delete disfluencies, ignoring verbatim faithfulness. We benchmark 11 ASR models from encoder-decoder, CTC and transducer families using both verbatim and intended references on atypical stuttered speech as a case study. Our quantitative assessment underlines the disparity in model performance and rankings using the two transcript styles. Through this analysis, we highlight the importance of selecting a suitable transcription reference for valid model selection depending on the use-case, particularly for atypical ASR.",
     figure: "/src/assets/images/original_papers/dualref_benchmarking.png",
     figureCaption: "Figure 1 from original paper: Intended vs Verbatim performance specialization.",
     links: {
@@ -324,7 +336,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "stuttered-speech",
     highlight: "Interspeech 2025 · Clinical Stuttering Baselines",
-    abstract: "Standardized clinical assessment of stuttering severity—such as the Stuttering Severity Instrument (SSI-4)—depends upon detailed acoustic labeling of stuttering events including repetitions, prolongations, and postural fixations. We introduce a dataset of expert clinical annotations for automatic stuttering severity assessment, providing validated acoustic baselines to train neural architectures capable of automated severity profiling and clinical progress monitoring.",
+    abstract: "Stuttering is a complex disorder that requires specialized expertise for effective assessment and treatment. This paper presents an effort to enhance the FluencyBank dataset with a new stuttering annotation scheme based on established clinical standards. To achieve high-quality annotations, we hired expert clinicians to label the data, ensuring that the resulting annotations mirror real-world clinical expertise. The annotations are multi-modal, incorporating audiovisual features for the detection and classification of stuttering moments, secondary behaviors, and tension scores. In addition to individual annotations, we additionally provide a test set with highly reliable annotations based on expert consensus for assessing individual annotators and machine learning models. Our experiments and analysis illustrate the complexity of this task that necessitates extensive clinical expertise for valid training and evaluation of stuttering assessment models.",
     links: {
       paper: "https://www.isca-archive.org/interspeech_2025/valente25_interspeech.pdf",
       dataset: "https://github.com/mbzuai-nlp/CASA/tree/main",
@@ -347,12 +359,12 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2024,
     category: "speech-multilingual-nlp",
     highlight: "EMNLP 2024 Findings (Master's Thesis)",
-    abstract: "Speech recognition (ASR) and text-to-speech (TTS) models are traditionally treated as separate systems with independent parameters, doubling computational and storage overhead. STTATTS introduces a parameter-efficient multi-task framework that jointly learns ASR and multi-speaker TTS using a shared transformer encoder-decoder backbone connected via an MLP-based task fusion module. STTATTS cuts overall parameter count by approximately 50% while matching or outperforming independently trained single-task baselines across English and Arabic.",
+    abstract: "Speech recognition and speech synthesis models are typically trained separately, each with its own set of learning objectives, training data, and model parameters, resulting in two distinct large networks. We propose a parameter-efficient approach to learning ASR and TTS jointly via a multi-task learning objective and shared parameters. Our evaluation demonstrates that the performance of our multi-task model is comparable to that of individually trained models while significantly saving computational and memory costs (~50% reduction in the total number of parameters required for the two tasks combined). We experiment with English as a resource-rich language, and Arabic as a relatively low-resource language due to shortage of TTS data. Our models are trained with publicly available data, and both the training code and model checkpoints are openly available for further research.",
     figure: "/src/assets/images/original_papers/sttatts_architecture.png",
     figureCaption: "Figure 1 from original paper: STTATTS task fusion architecture.",
     links: {
-      paper: "https://aclanthology.org/2024.findings-emnlp.398.pdf",
-      code: "https://github.com/Theehawau",
+      paper: "https://arxiv.org/abs/2410.18607",
+      code: "https://github.com/mbzuai-nlp/sttatts",
     },
     bibtex: `@inproceedings{toyin2024sttatts,
   title={{STTATTS}: Unified Speech-to-Text and Text-to-Speech Model},
@@ -372,7 +384,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     isEqualContribution: true,
     award: "Best Paper Award at ArabicNLP 2023",
     highlight: "Best Paper Award at ArabicNLP 2023",
-    abstract: "We present ArTST, a pre-trained Arabic text and speech transformer based on a unified modal framework. Pre-trained from scratch on Modern Standard Arabic acoustic and textual data, ArTST unifies Speech-to-Text (ASR), Text-to-Speech synthesis (TTS), and Spoken Dialect Identification within a single shared representation. ArTST establishes state-of-the-art benchmarks in Arabic speech tasks and demonstrates exceptional parameter transfer in low-resource speech synthesis.",
+    abstract: "We present ArTST, a pre-trained Arabic text and speech transformer for supporting open-source speech technologies for the Arabic language. The model architecture follows the unified-modal framework, SpeechT5, that was recently released for English, and is focused on Modern Standard Arabic (MSA), with plans to extend the model for dialectal and code-switched Arabic in future editions. We pre-trained the model from scratch on MSA speech and text data, and fine-tuned it for the following tasks: Automatic Speech Recognition (ASR), Text-To-Speech synthesis (TTS), and spoken dialect identification. In our experiments comparing ArTST with SpeechT5, as well as with previously reported results in these tasks, ArTST performs on a par with or exceeding the current state-of-the-art in all three tasks. Moreover, we find that our pre-training is conducive for generalization, which is particularly evident in the low-resource TTS task. The pre-trained model as well as the fine-tuned ASR and TTS models are released for research use.",
     figure: "/src/assets/images/original_papers/artst_architecture.png",
     figureCaption: "Figure 1 from original paper: ArTST unified text and speech transformer architecture.",
     links: {
@@ -395,7 +407,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "speech-multilingual-nlp",
     highlight: "EMNLP 2025 Main Track",
-    abstract: "Africa is home to over 2,000 languages representing approximately one-third of the world’s linguistic diversity, yet African languages remain severely underrepresented in global speech processing benchmarks. We present an empirical survey and research map exploring speech technologies across Africa, reviewing dataset availability, dialectal density, acoustic modeling frontiers, and strategic recommendations for equitable speech research.",
+    abstract: "Africa’s rich linguistic diversity remains significantly underrepresented in speech technologies, creating barriers to digital inclusion. To alleviate this challenge, we systematically map the continent’s speech space of datasets and technologies, leading to a new comprehensive benchmark SimbaBench for downstream African speech tasks. Using SimbaBench, we introduce the Simba family of models, achieving state-of-the-art performance across multiple African languages and speech tasks. Our benchmark analysis reveals critical patterns in resource availability, while our model evaluation demonstrates how dataset quality, domain diversity, and language family relationships influence performance across languages. Our work highlights the need for expanded speech technology resources that better reflect Africa’s linguistic diversity and provides a solid foundation for future research and development efforts toward more inclusive speech technologies.",
     links: {
       paper: "https://aclanthology.org/2025.emnlp-main.559.pdf",
     },
@@ -415,7 +427,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2026,
     category: "speech-multilingual-nlp",
     highlight: "LREC 2026",
-    abstract: "Text diacritization is essential for disambiguating pronunciation, grammatical morphology, and lexical semantics in morphologically complex and tonal orthographies. This study presents a comparative evaluation of state-of-the-art Large Language Models (LLMs) on automatic text diacritization using Modern Standard Arabic and Yoruba as case studies. We analyze zero-shot, few-shot, and fine-tuned capabilities, highlighting phonetic nuances, tonal diacritic recovery, and common failure modes in low-resource African and Afroasiatic languages.",
+    abstract: "We investigate the effectiveness of large language models (LLMs) for text diacritization in two typologically distinct languages: Arabic and Yoruba. To enable a rigorous evaluation, we introduce a novel multilingual dataset MultiDiac, with diverse samples that capture a range of diacritic ambiguities. We evaluate 12 LLMs varying in size, accessibility, and language coverage, and benchmark them against 4 specialized diacritization models. Additionally, we fine-tune four small open-source models using LoRA for Yoruba. Our results show that many off-the-shelf LLMs outperform specialized diacritization models, but smaller models suffer from hallucinations. We find that fine-tuning on a small dataset can help improve diacritization performance and reduce hallucinations for Yoruba.",
     links: {
       paper: "https://arxiv.org/abs/2506.11602",
       dataset: "https://huggingface.co/datasets/herwoww/MultiDiac",
@@ -436,7 +448,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     category: "speech-multilingual-nlp",
     isEqualContribution: true,
     highlight: "ACL 2025 (*Equal Contribution)",
-    abstract: "Automatic Speech Recognition for Arabic faces significant acoustic and lexical challenges due to the stark diglossic divergence between Modern Standard Arabic (MSA) and diverse regional spoken dialects. We investigate dialectal coverage, acoustic robustness, and cross-dialectal transfer across major Arabic dialect groups, evaluating both foundational pre-trained encoders and fine-tuned architectures to establish generalization benchmarks across dialectal continua.",
+    abstract: "Developing robust automatic speech recognition (ASR) systems for Arabic requires effective strategies to manage its diversity. Existing ASR systems mainly cover the modern standard Arabic (MSA) variety and few high-resource dialects, but fall short in coverage and generalization across the multitude of spoken variants. Code-switching with English and French is also common in different regions of the Arab world, which challenges the performance of monolingual Arabic models. In this work, we introduce a suite of ASR models optimized to effectively recognize multiple variants of spoken Arabic, including MSA, various dialects, and code-switching. We provide open-source pre-trained models that cover data from 17 Arabic-speaking countries, and fine-tuned MSA and dialectal ASR models that include at least 11 variants, as well as multi-lingual ASR models covering embedded languages in code-switched utterances. We evaluate ASR performance across these spoken varieties and demonstrate both coverage and performance gains compared to prior models.",
     links: {
       paper: "https://aclanthology.org/2025.acl-long.1427.pdf",
       code: "https://github.com/Theehawau/ArTST",
@@ -457,7 +469,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "speech-multilingual-nlp",
     highlight: "ACL 2025",
-    abstract: "Although Large Language Models demonstrate state-of-the-art performance on mainstream benchmarks, their capabilities on indigenous African languages remain critically under-benchmarked. We conduct a rigorous multi-task evaluation of leading proprietary and open-weight LLMs across African languages, evaluating performance in machine translation, question answering, reasoning, and sentiment analysis.",
+    abstract: "Africa’s rich linguistic heritage remains underrepresented in NLP, largely due to historical policies that favor foreign languages and create significant data inequities. In this paper, we integrate theoretical insights on Africa’s language landscape with an empirical evaluation using Sahara— a comprehensive benchmark curated from large-scale, publicly accessible datasets capturing the continent’s linguistic diversity. By systematically assessing the performance of leading large language models (LLMs) on Sahara, we demonstrate how policy-induced data variations directly impact model effectiveness across African languages. Our findings reveal that while a few languages perform reasonably well, many Indigenous languages remain marginalized due to sparse data. Leveraging these insights, we offer actionable recommendations for policy reforms and inclusive data practices. Overall, our work underscores the urgent need for a dual approach—combining theoretical understanding with empirical evaluation—to foster linguistic diversity in AI for African communities.",
     links: {
       paper: "https://aclanthology.org/2025.acl-long.1572.pdf",
     },
@@ -478,9 +490,9 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "speech-multilingual-nlp",
     highlight: "CVPR 2025",
-    abstract: "While vision-language models (LMMs) have demonstrated impressive multimodal reasoning, their training and evaluation pipelines remain heavily centered on English and Western cultural contexts. We present a systematic benchmark evaluating vision-language models across 100 culturally diverse languages, analyzing cross-lingual visual question answering, cultural concepts, and failure modes across low-resource language communities.",
+    abstract: "Existing Large Multimodal Models (LMMs) generally focus on only a few regions and languages. As LMMs continue to improve, it is increasingly important to ensure they understand cultural contexts, respect local sensitivities, and support low-resource languages, all while effectively integrating corresponding visual cues. In pursuit of culturally diverse global multimodal models, our proposed All Languages Matter Benchmark (ALM-bench) represents the largest and most comprehensive effort to date for evaluating LMMs across 100 languages. ALM-bench challenges existing models by testing their ability to understand and reason about culturally diverse images paired with text in various languages, including many low-resource languages traditionally underrepresented in LMM research. The benchmark offers a robust and nuanced evaluation framework featuring various question formats, including true/false, multiple choice, and open-ended questions, which are further divided into short and long-answer categories. ALM-bench design ensures a comprehensive assessment of a model's ability to handle varied levels of difficulty in visual and linguistic reasoning. To capture the rich tapestry of global cultures, ALM-bench carefully curates content from 13 distinct cultural aspects, ranging from traditions and rituals to famous personalities and celebrations. Through this, ALM-bench not only provides a rigorous testing ground for state-of-the-art open and closed-source LMMs but also highlights the importance of cultural and linguistic inclusivity, encouraging the development of models that can serve diverse global populations effectively. Our benchmark is publicly available.",
     links: {
-      paper: "https://arxiv.org/abs/2503.01824",
+      paper: "https://arxiv.org/abs/2411.16508",
     },
     bibtex: `@inproceedings{vayani2025alllanguages,
   title={All Languages Matter: Evaluating {LMMs} on Culturally Diverse 100 Languages},
@@ -498,9 +510,9 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "speech-multilingual-nlp",
     highlight: "ICASSP 2025",
-    abstract: "Detecting infant distress cries in natural home environments requires isolating transient cry acoustics from continuous environmental noise. We propose a causal temporal representation framework that models sequential acoustic dependencies without future temporal leakage. Our architecture achieves superior classification accuracy and significantly fewer false positives compared to standard non-causal spectral baselines.",
+    abstract: "This paper addresses a major challenge in acoustic event detection, in particular infant cry detection in the presence of other sounds and background noises: the lack of precise annotated data. We present two contributions for supervised and unsupervised infant cry detection. The first is an annotated dataset for cry segmentation, which enables supervised models to achieve state-of-the-art performance. Additionally, we propose a novel unsupervised method, Causal Representation Spare Transition Clustering (CRSTC), based on causal temporal representation, which helps address the issue of data scarcity more generally. By integrating the detected cry segments, we significantly improve the performance of downstream infant cry classification, highlighting the potential of this approach for infant care applications.",
     links: {
-      paper: "https://arxiv.org/abs/2410.19830",
+      paper: "https://arxiv.org/abs/2503.06247",
       code: "https://github.com/danninglee/infant-cry-detection-causal-temporal-representation"
     },
     bibtex: `@inproceedings{fu2025infantcry,
@@ -519,9 +531,9 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "speech-multilingual-nlp",
     highlight: "COLING 2025",
-    abstract: "As neural text generation becomes increasingly fluent and indistinguishable from human writing, reliable detection of machine-generated text is vital for academic integrity and information security. We investigate the boundaries and failure modes of current detector architectures under domain distribution shift, iterative paraphrasing, adversarial perturbations, and multilingual generation.",
+    abstract: "Recent improvements in the quality of the generations by large language models have spurred research into identifying machine-generated text. Such work often presents high-performing detectors. However, humans and machines can produce text in different styles and domains, yet the performance impact of such on machine generated text detection systems remains unclear. In this paper, we audit the classification performance for detecting machine-generated text by evaluating on texts with varying writing styles. We find that classifiers are highly sensitive to stylistic changes and differences in text complexity, and in some cases degrade entirely to random classifiers. We further find that detection systems are particularly susceptible to misclassify easy-to-read texts while they have high performance for complex texts, leading to concerns about the reliability of detection systems. We recommend that future work attends to stylistic factors and reading difficulty levels of human-written and machine-generated text.",
     links: {
-      paper: "https://arxiv.org/abs/2411.02324",
+      paper: "https://arxiv.org/abs/2406.11073",
     },
     bibtex: `@inproceedings{doughman2025detecting,
   title={Exploring the Limitations of Detecting Machine-Generated Text},
@@ -539,7 +551,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2026,
     category: "speech-multilingual-nlp",
     highlight: "ACL 2026 (Long Papers)",
-    abstract: "Idiomatic expressions present profound challenges for cross-lingual NLP models due to their non-compositional figurative meanings. We present a comprehensive cross-lingual study of idioms in sentences and dialogic conversations across high-, medium-, and low-resource languages, benchmarking LLMs on comprehension, contextual sense disambiguation, and cross-cultural communicative intent.",
+    abstract: "Idiomatic expressions pose a major challenge for multilingual NLP because their meanings shift between figurative and literal usage, often requiring context for accurate interpretation. Prior work has focused on high-resource languages typically evaluates isolated idiom-meaning questions, overlooking realistic discourse. We introduce MIDI, a multilingual idiom dataset spanning 3 high-, 3 medium-, and 12 low-resource languages, curated by native speakers. Unlike previous datasets, MIDI provides idioms embedded in both sentence-level and conversational contexts, capturing both literal and figurative readings. Benchmarking state-of-the-art models shows that idiom comprehension degrades in low-resource languages and that, in all resource tiers, literal interpretations are substantially harder than figurative ones. Conversational context improves performance but does not eliminate these disparities. Through controlled tests and interventions on hidden representations, we further separate memorization from reasoning, exposing core limitations of current models.",
     links: {
       paper: "https://aclanthology.org/2026.acl-long.564.pdf",
       dataset: "https://huggingface.co/datasets/Almheiri/MultIdiom"
@@ -560,7 +572,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "data-curation",
     highlight: "Interspeech 2025 · Curated Dataset",
-    abstract: "Neural text-to-speech synthesis (TTS) for Arabic is hindered by the scarcity of high-fidelity, phonetically balanced, multi-speaker corpora. We present ArVoice, a multi-speaker speech dataset engineered specifically for expressive Arabic speech synthesis. ArVoice incorporates diverse native speaker identities, balanced phonetic distribution, and rigorous recording standards to serve as an open benchmark for low-resource and multi-speaker Arabic speech synthesis.",
+    abstract: "We introduce ArVoice, a multi-speaker Modern Standard Arabic (MSA) speech corpus with diacritized transcriptions, intended for multi-speaker speech synthesis, and can be useful for other tasks such as speech-based diacritic restoration, voice conversion, and deepfake detection. ArVoice comprises: (1) a new professionally recorded set from six voice talents with diverse demographics, (2) a modified subset of the Arabic Speech Corpus; and (3) high-quality synthetic speech from two commercial systems. The complete corpus consists of a total of 83.52 hours of speech across 11 voices; around 10 hours consist of human voices from 7 speakers. We train three open-source TTS and two voice conversion systems to illustrate the use cases of the dataset. The corpus is available for research use.",
     links: {
       paper: "https://www.isca-archive.org/interspeech_2025/toyin25_interspeech.pdf",
       dataset: "https://huggingface.co/datasets/MBZUAI/ArVoice",
@@ -580,7 +592,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2024,
     category: "data-curation",
     highlight: "EMNLP 2024 Findings",
-    abstract: "Standard Word Error Rate (WER) is inherently rigid when evaluating code-switched speech because valid transliterations (writing loanwords in the matrix language script) and immediate translations are penalized as transcription errors. We propose PolyWER, an evaluation framework that formulates dynamic programming alignment matrices to accept multiple valid lexical, transliterated, and translated realizations. Human evaluation experiments confirm PolyWER aligns much closer with human perceptual judgments than conventional WER or CER.",
+    abstract: "Code-switching in speech, particularly between languages that use different scripts, can potentially be correctly transcribed in various forms, including different ways of transliteration of the embedded language into the matrix language script. Traditional methods for measuring accuracy, such as Word Error Rate (WER), are too strict to address this challenge. In this paper, we introduce PolyWER, a proposed framework for evaluating speech recognition systems to handle language-mixing. PolyWER accepts transcriptions of code-mixed segments in different forms, including transliterations and translations. We demonstrate the algorithms use cases through detailed examples, and evaluate it against human judgement. To enable the use of this metric, we appended the annotations of a publicly available Arabic-English code-switched dataset with transliterations and translations of code-mixed speech. We also utilize these additional annotations for fine-tuning ASR models and compare their performance using PolyWER. In addition to our main finding on PolyWER’s effectiveness, our experiments show that alternative annotations could be more effective for fine-tuning monolingual ASR models.",
     figure: "/src/assets/images/original_papers/polywer_matrix.png",
     figureCaption: "Figure 1 from original paper: Lowest-cost PolyWER path alignment matrix.",
     links: {
@@ -603,7 +615,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2026,
     category: "data-curation",
     highlight: "LREC 2026 (ISTI CNR Fellowship)",
-    abstract: "Information retrieval and dense semantic search benchmarks have largely concentrated on modern high-resource languages, leaving classical historical textual traditions underserved. We introduce Gretino, a curated evaluation benchmark in Ancient Greek and Latin designed to evaluate dense retrievers, sparse lexical matchers, and cross-lingual alignment pipelines across classical philology and humanities corpora.",
+    abstract: "Semantic similarity search is a method for exploring large text corpora and retrieving conceptually related content. Although widely used in modern language applications, it remains underexplored in the context of classical literature, where it could provide scholars with tools to uncover meaningful connections across authors, genres, and languages, surpassing the limitations of rule-based or keyword search systems. To promote the adoption of semantic retrieval in classical languages, we introduce Gretino, the first benchmark dataset for evaluating semantic search systems in Latin, Ancient Greek, and cross-lingual settings. Gretino comprises 240 carefully designed queries, each paired with five semantically relevant passages in Latin and Greek. The dataset is divided into two subsets: Gretino Silver, consisting of 200 queries and 1,000 targets (evenly split between Latin and Greek), generated with the assistance of ChatGPT and subsequently reviewed; and Gretino Gold, a manually curated high-quality subset of 40 queries and 200 targets, fully based on authentic classical texts. We evaluate four pre-trained language models: GreBERTa, LaBERTa, PhilBERTA, and SPhilBERTa and demonstrate the potential of a contrastive learning approach based on SimCSE (Gao et al., 2021) for fine-tuning, showing that training on carefully curated bilingual corpora, with texts aligned in the two languages, can improve retrieval performance.",
     links: {
       paper: "https://aclanthology.org/2026.lrec-1.70.pdf",
       code: "https://github.com/gpucce/index_encoders_eval_itserr",
@@ -624,7 +636,7 @@ export const ALL_PUBLICATIONS: Publication[] = [
     year: 2025,
     category: "data-curation",
     highlight: "SDAIA HUMAIN Winter School · arXiv:2506.07722",
-    abstract: "Arabic pronunciation assessment presents rigorous phonetic, phonological, and tajweed constraints. We present a unified evaluation benchmark for automatic pronunciation assessment using Qur'anic recitation as a high-fidelity case study, comparing state-of-the-art acoustic encoders across phoneme-level and rule-level pronunciation validation.",
+    abstract: "We present a unified benchmark for mispronunciation detection in Modern Standard Arabic (MSA) using Qur'anic recitation as a case study. Our approach lays the groundwork for advancing Arabic pronunciation assessment by providing a comprehensive pipeline that spans data processing, the development of a specialized phoneme set tailored to the nuances of MSA pronunciation, and the creation of the first publicly available test set for this task, which we term as the Qur'anic Mispronunciation Benchmark (QuranMB.v1). Furthermore, we evaluate several baseline models to provide initial performance insights, thereby highlighting both the promise and the challenges inherent in assessing MSA pronunciation. By establishing this standardized framework, we aim to foster further research and development in pronunciation assessment in Arabic language technology and related applications.",
     links: {
       paper: "https://www.isca-archive.org/interspeech_2025/elkheir25b_interspeech.pdf",
     },
@@ -642,13 +654,12 @@ export const TALKS_BY_LOCATION: LocationTalkGroup[] = [
     id: "alexandria-uni",
     institution: "Alexandria University",
     location: "Alexandria, Egypt",
-    isUpcoming: true,
     announcementUrl: "https://lnkd.in/p/gzNc7vrw",
     talks: [
       {
         title: "Efficient Joint Crossmodal Language Modeling",
         date: "October 13, 2026",
-        isUpcoming: true,
+        isoDate: "2026-10-13",
         announcementUrl: "https://lnkd.in/p/gzNc7vrw",
         paperUrl: "https://arxiv.org/abs/2410.18607"
       }
@@ -663,6 +674,7 @@ export const TALKS_BY_LOCATION: LocationTalkGroup[] = [
       {
         title: "ArTST: Arabic Text and Speech Transformer",
         date: "April 2025",
+        isoDate: "2025-04-01",
         announcementUrl: "https://www.itserr.it/event/seminar-arabic-multimodal-language-modeling/",
         paperUrl: "https://arxiv.org/abs/2310.16621"
       }
@@ -677,6 +689,7 @@ export const TALKS_BY_LOCATION: LocationTalkGroup[] = [
       {
         title: "Efficient Joint Crossmodal Language Modeling",
         date: "July 2026",
+        isoDate: "2026-07-01",
         announcementUrl: "https://lnkd.in/p/gRyksZFt",
         paperUrl: "https://arxiv.org/abs/2410.18607"
       }

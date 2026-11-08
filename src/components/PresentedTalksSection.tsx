@@ -1,8 +1,16 @@
 import React from 'react';
-import { TALKS_BY_LOCATION } from '../data/portfolioData';
+import { TALKS_BY_LOCATION, isTalkUpcoming, isGroupUpcoming } from '../data/portfolioData';
 import { MapPin, ExternalLink, Mic2 } from 'lucide-react';
 
+const latestIsoDate = (talks: { isoDate: string }[]) =>
+  talks.reduce((max, t) => (t.isoDate > max ? t.isoDate : max), '');
+
 export const PresentedTalksSection: React.FC = () => {
+  const sortedGroups = [...TALKS_BY_LOCATION].sort((a, b) =>
+    latestIsoDate(b.talks).localeCompare(latestIsoDate(a.talks))
+  );
+  const hasUpcoming = sortedGroups.some((g) => isGroupUpcoming(g));
+
   return (
     <section id="talks" className="py-16 border-t border-white/5 bg-[#080A10]">
       <div className="max-w-7xl mx-auto px-6">
@@ -12,13 +20,13 @@ export const PresentedTalksSection: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold text-amber-400 uppercase tracking-widest">
               <Mic2 className="w-3.5 h-3.5" />
-              <span>Invited Seminars & Research Presentations</span>
+              <span>Invited Seminars &amp; Research Presentations</span>
             </div>
             <h2
               className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Presented & Upcoming Talks
+              {hasUpcoming ? 'Presented & Upcoming Talks' : 'Presented Talks'}
             </h2>
           </div>
           <p className="text-xs text-slate-400 max-w-sm">
@@ -28,11 +36,13 @@ export const PresentedTalksSection: React.FC = () => {
 
         {/* Location Groups Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TALKS_BY_LOCATION.map((loc) => (
+          {sortedGroups.map((loc) => {
+            const groupUpcoming = isGroupUpcoming(loc);
+            return (
             <div
               key={loc.id}
               className={`p-6 rounded-2xl border transition-all duration-200 flex flex-col justify-between ${
-                loc.isUpcoming
+                groupUpcoming
                   ? 'border-amber-400/40 bg-[#0E1220]/90 hover:border-amber-400/70 shadow-lg shadow-amber-500/5'
                   : 'border-white/10 bg-[#0E111D]/80 hover:bg-[#121626] hover:border-amber-400/30'
               }`}
@@ -50,7 +60,7 @@ export const PresentedTalksSection: React.FC = () => {
                     </div>
                   </div>
 
-                  {loc.isUpcoming && (
+                  {groupUpcoming && (
                     <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md shrink-0">
                       Upcoming
                     </span>
@@ -71,7 +81,7 @@ export const PresentedTalksSection: React.FC = () => {
                         
                         <div className="flex items-center justify-between pt-1 gap-2 flex-wrap">
                           <span className="font-mono text-xs text-amber-400 tabular-nums font-medium flex items-center gap-1.5">
-                            {talk.isUpcoming && (
+                            {isTalkUpcoming(talk) && (
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                             )}
                             {talk.date}
@@ -109,7 +119,8 @@ export const PresentedTalksSection: React.FC = () => {
               </div>
 
             </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>

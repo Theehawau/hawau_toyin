@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PROFILE } from '../data/portfolioData';
-import { X, Mail, Copy, Check, Github, GraduationCap, Send, Phone, Linkedin, Globe } from 'lucide-react';
+import { X, Mail, Copy, Check, Github, GraduationCap, Send, MapPin, Linkedin, Globe } from 'lucide-react';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -105,9 +105,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
           </div>
 
           <div className="flex items-center gap-2 text-xs text-slate-300 pt-2 border-t border-white/5">
-            <Phone className="w-3.5 h-3.5 text-amber-400" />
-            <span className="font-mono text-slate-400">{PROFILE.phone}</span>
-            <span className="text-slate-600">·</span>
+            <MapPin className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-slate-400">{PROFILE.location}</span>
           </div>
         </div>

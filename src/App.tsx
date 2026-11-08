@@ -123,7 +123,7 @@ export default function App() {
                 PhD in Natural Language Processing · Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI)
               </p>
               <p className="text-xs text-amber-400/90 font-mono mt-0.5">
-                {PROFILE.email} · {PROFILE.phone}
+                {PROFILE.email}
               </p>
             </div>
 

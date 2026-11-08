@@ -7,6 +7,13 @@ interface PublicationsSectionProps {
   selectedCategoryFilter?: string | null;
 }
 
+const isSelf = (author: string) => author.includes('Hawau');
+
+/** First listed author, or any equal-contribution (*) author when the paper is co-first. */
+const isFirstAuthor = (pub: Publication) =>
+  isSelf(pub.authors[0] ?? '') ||
+  (!!pub.isEqualContribution && pub.authors.some((a) => isSelf(a) && a.trim().endsWith('*')));
+
 export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
   onShowToast,
   selectedCategoryFilter
@@ -189,6 +196,11 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
                         <span className="font-semibold text-amber-400">{pub.venue}</span>
                         <span aria-hidden="true">·</span>
                         <span className="font-mono tabular-nums">{pub.year}</span>
+                        {isFirstAuthor(pub) && (
+                          <span className="px-1.5 py-0.5 rounded-md bg-sky-500/10 border border-sky-400/30 text-sky-300 text-[10px] font-semibold uppercase tracking-wider">
+                            {pub.isEqualContribution ? 'Co-first author' : 'First author'}
+                          </span>
+                        )}
                         {pub.isEqualContribution && (
                           <>
                             <span aria-hidden="true">·</span>
@@ -382,7 +394,17 @@ export const PublicationsSection: React.FC<PublicationsSectionProps> = ({
                   <span className="font-mono">{st.year}</span>
                 </div>
                 <h4 className="text-sm font-bold text-white">{st.title}</h4>
-                <p className="text-xs text-slate-400">{st.authors.join(', ')}</p>
+                <p className="text-xs text-slate-400">
+                  {st.authors.map((author, i) => (
+                    <span
+                      key={author + i}
+                      className={isSelf(author) ? 'font-bold text-white underline decoration-amber-400/60 underline-offset-2' : ''}
+                    >
+                      {author}
+                      {i < st.authors.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                </p>
               </div>
             ))}
           </div>

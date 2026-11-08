@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { PROFILE, EDUCATION, EXPERIENCE, LEADERSHIP_VOLUNTEERING, ALL_PUBLICATIONS, SHARED_TASKS, HONORS_AND_AWARDS, TALKS_BY_LOCATION } from '../data/portfolioData';
-import { X, Download, Printer, Mail, MapPin, Globe, Phone, Linkedin, GraduationCap } from 'lucide-react';
+import { PROFILE, EDUCATION, EXPERIENCE, LEADERSHIP_VOLUNTEERING, ALL_PUBLICATIONS, SHARED_TASKS, HONORS_AND_AWARDS, TALKS_BY_LOCATION, isTalkUpcoming } from '../data/portfolioData';
+import { X, Download, Printer, Mail, MapPin, Globe, Linkedin, GraduationCap } from 'lucide-react';
 
 interface CVModalProps {
   isOpen: boolean;
@@ -68,7 +68,7 @@ export const CVModal: React.FC<CVModalProps> = ({ isOpen, onClose, onShowToast }
     const element = document.createElement("a");
     const cvText = 
 `HAWAU OLAMIDE TOYIN
-Email: ${PROFILE.email} | Phone: ${PROFILE.phone} | Website: ${PROFILE.website}
+Email: ${PROFILE.email} | Website: ${PROFILE.website}
 LinkedIn: ${PROFILE.linkedin} | Google Scholar: Hawau Olamide Toyin
 
 RESEARCH INTERESTS:
@@ -170,8 +170,8 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
               <span className="font-mono">{PROFILE.email}</span>
             </div>
             <div className="cv-contact-item flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>{PROFILE.phone}</span>
+              <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>{PROFILE.location}</span>
             </div>
             <div className="cv-contact-item flex items-center gap-1.5">
               <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -287,7 +287,7 @@ ${HONORS_AND_AWARDS.map(a => `• ${a.title} (${a.year}) - ${a.organization}`).j
                         )}
                       </div>
                       <span className="cv-item-venue font-mono text-amber-400 font-medium shrink-0 text-[11px]">
-                        {t.isUpcoming ? `Upcoming (${t.date})` : t.date}
+                        {isTalkUpcoming(t) ? `Upcoming (${t.date})` : t.date}
                       </span>
                     </div>
                   ))}

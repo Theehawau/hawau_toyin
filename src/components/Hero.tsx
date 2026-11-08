@@ -1,6 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { PROFILE } from '../data/portfolioData';
+import { PROFILE, TALKS_BY_LOCATION, isTalkUpcoming } from '../data/portfolioData';
 import { ArrowDown, Github, Globe, GraduationCap, MapPin, Mail, Linkedin, Languages, ExternalLink, Award, Mic2, Sparkles } from 'lucide-react';
+
+/** Soonest upcoming talk; if none are scheduled, the most recent past talk. */
+const getFeaturedTalk = () => {
+  const all = TALKS_BY_LOCATION.flatMap((g) =>
+    g.talks.map((t) => ({ ...t, institution: g.institution, location: g.location, upcoming: isTalkUpcoming(t) }))
+  );
+  const upcoming = all.filter((t) => t.upcoming).sort((a, b) => a.isoDate.localeCompare(b.isoDate));
+  if (upcoming.length) return upcoming[0];
+  return all.sort((a, b) => b.isoDate.localeCompare(a.isoDate))[0];
+};
 
 interface HeroProps {
   onOpenCV: () => void;
@@ -9,6 +19,7 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast }) => {
+  const featuredTalk = getFeaturedTalk();
   const [avatarSrc, setAvatarSrc] = useState<string>(() => {
     return 'funny_face.JPG';
   });
@@ -117,7 +128,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
             {/* Bio Narrative from CV */}
             <p 
               className="text-slate-600 dark:text-slate-300 leading-relaxed font-sans font-normal"
-              style={{ fontSize: '12px' }}
+              style={{ fontSize: '15px' }}
             >
               {PROFILE.bio}
             </p>
@@ -156,23 +167,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
               </button>
             </div>
 
-            {/* Executive AI Facilitation Spotlight Pill */}
-            <div className="pt-1">
-              <a
-                href={PROFILE.executiveProgramUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-xs transition-colors"
-              >
-                <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-                <span className="font-semibold text-amber-600 dark:text-amber-300">Executive Facilitator:</span>
-                <span className="text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
-                  AI for Business Brainstorming · MBZUAI Executive Program & AI Leadership Training
-                </span>
-                <ExternalLink className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0 ml-0.5" />
-              </a>
-            </div>
-
             {/* Academic Profiles & Social Links */}
             <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center gap-4 text-xs text-slate-600 dark:text-slate-400 font-mono">
               <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px] font-sans font-semibold">
@@ -197,6 +191,17 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
               >
                 <Github className="w-3.5 h-3.5" />
                 <span>GitHub</span>
+              </a>
+
+              <a
+                href={PROFILE.huggingface}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-amber-500 dark:hover:text-amber-400 transition-colors flex items-center gap-1"
+                title="Models & datasets on Hugging Face"
+              >
+                <span aria-hidden="true" className="text-[13px] leading-none">🤗</span>
+                <span>Hugging Face</span>
               </a>
 
               <a
@@ -278,26 +283,36 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                   </a>
                 </div>
 
-                {/* 2. Upcoming Talk */}
+                {/* 2. Next Upcoming Talk (or most recent one if none are scheduled) */}
+                {featuredTalk && (
                 <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-indigo-400/30 dark:border-indigo-400/25 hover:border-indigo-400/50 transition-colors flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-300 flex items-center gap-1.5">
                         <Mic2 className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
-                        <span>Upcoming Talk</span>
+                        <span>{featuredTalk.upcoming ? 'Upcoming Talk' : 'Latest Talk'}</span>
                       </span>
-                      <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-[9px] font-semibold">Oct 13, 2026</span>
+                      <span
+                        className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-semibold ${
+                          featuredTalk.upcoming
+                            ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10'
+                            : 'text-slate-500 dark:text-slate-400 bg-slate-500/10'
+                        }`}
+                      >
+                        {featuredTalk.date}
+                      </span>
                     </div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5 leading-snug">
-                      Efficient Joint Crossmodal Language Modeling
+                      {featuredTalk.title}
                     </p>
                     <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
-                      Alexandria University · Alexandria, Egypt
+                      {featuredTalk.institution} · {featuredTalk.location}
                     </p>
                   </div>
                   <div className="flex items-center gap-3 mt-2.5 pt-1">
+                    {featuredTalk.announcementUrl && (
                     <a
-                      href="https://lnkd.in/p/gzNc7vrw"
+                      href={featuredTalk.announcementUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-500 dark:hover:text-indigo-200 transition-colors"
@@ -305,8 +320,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                       <span>Talk Announcement</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
+                    )}
+                    {featuredTalk.paperUrl && (
                     <a
-                      href="https://arxiv.org/abs/2410.18607"
+                      href={featuredTalk.paperUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
@@ -314,8 +331,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCV, onOpenContact, onShowToast
                       <span>Paper</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
+                    )}
                   </div>
                 </div>
+                )}
               </div>
             </div>
           </div>
