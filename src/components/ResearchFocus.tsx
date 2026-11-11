@@ -1,143 +1,225 @@
 import React from 'react';
-import { PROFILE } from '../data/portfolioData';
-import { Activity, Globe2, Database, Radio, ArrowRight, ExternalLink, Trophy } from 'lucide-react';
+import { ALL_PUBLICATIONS } from '../data/portfolioData';
+import {
+  Activity,
+  Globe2,
+  Database,
+  ArrowRight,
+  ExternalLink,
+  Trophy,
+  Cpu,
+  ClipboardCheck,
+  PackageOpen,
+  Users,
+} from 'lucide-react';
 
 interface ResearchFocusProps {
   onSelectTopic: (topicId: string) => void;
 }
 
+/** Short statement of research direction shown at the top of the section. */
+const RESEARCH_STATEMENT =
+  "PhD candidate in speech and language AI focused on inclusive and accessible technology for atypical speech and low-resource languages.";
+
+/** How the research is done: the through-line across all three areas. */
+const APPROACH = [
+  {
+    icon: <Cpu className="w-4 h-4 text-amber-400" />,
+    title: "Build models",
+    desc: "Speech and language models that work for the people current systems leave out.",
+  },
+  {
+    icon: <ClipboardCheck className="w-4 h-4 text-indigo-400" />,
+    title: "Design evaluations that matter",
+    desc: "Metrics and benchmarks grounded in what users and clinicians actually need.",
+  },
+  {
+    icon: <PackageOpen className="w-4 h-4 text-emerald-400" />,
+    title: "Curate open resources",
+    desc: "Open-source datasets and benchmarks the wider community can build on.",
+  },
+  {
+    icon: <Users className="w-4 h-4 text-sky-400" />,
+    title: "Work with the people affected",
+    desc: "Clinicians, domain experts, and end users shape the research from the start.",
+  },
+];
+
 export const ResearchFocus: React.FC<ResearchFocusProps> = ({ onSelectTopic }) => {
   const pillars = [
     {
       id: "stuttered-speech",
-      title: "AI for Stuttered Speech",
+      category: "stuttered-speech",
+      title: "Atypical & Stuttered Speech",
       icon: <Activity className="w-5 h-5 text-amber-400" />,
-      shortDesc: "Pioneering clinically grounded dual-reference benchmarks, scoping reviews, and automatic severity annotations to make speech technologies equitable for people who stutter.",
+      shortDesc:
+        "Making speech technology work for people who stutter. This means evaluation that separates clinical from assistive needs, expert-annotated data for severity assessment, and guidelines grounded in surveys of people who stutter and speech-language pathologists.",
       award: "Speech Pathology Best Paper Award (Speech Pathology Australia @ Interspeech 2026)",
       projectLink: {
         title: "StutterBank Project Page",
-        url: "https://theehawau.github.io/stutterbank/"
+        url: "https://theehawau.github.io/stutterbank/",
       },
       bullets: [
         "Aligning Stuttered-Speech Research with End-User Needs",
         "What Counts as an Error? Dual-Reference Benchmarking",
         "Clinical Annotations for Automatic Stuttering Severity Assessment",
-      ]
+      ],
     },
     {
       id: "multilingual-speech-nlp",
-      title: "Speech Recognition, Multilingual & Multimodal NLP",
-      icon: <Radio className="w-5 h-5 text-indigo-400" />,
-      shortDesc: "Architecting unified multi-task speech-to-text & text-to-speech transformers, foundational multilingual representations, parameter-efficient LLM diacritizers, and auditing vision-language systems across 100 languages.",
+      category: "speech-multilingual-nlp",
+      title: "Low-Resource & Multilingual Speech and Language",
+      icon: <Globe2 className="w-5 h-5 text-indigo-400" />,
+      shortDesc:
+        "Speech and language models for Arabic, Yorùbá, and other under-served languages: unified speech-and-text models, dialect-robust recognition, and honest evaluation of LLMs across African languages and cultures.",
       award: "Best Paper Award (ArabicNLP @ EMNLP 2023 for ArTST)",
       bullets: [
-        "STTATTS: Unified Speech-to-Text & Text-to-Speech Model",
         "ArTST: Arabic Text and Speech Transformer",
-      ]
+        "STTATTS: Unified Speech-to-Text & Text-to-Speech Model",
+        "Dialectal Coverage and Generalization in Arabic ASR",
+        "Are LLMs Good Text Diacritizers? An Arabic and Yorùbá Case Study",
+      ],
     },
     {
       id: "data-curation",
-      title: "Data Curation",
+      category: "data-curation",
+      title: "Open Datasets, Benchmarks & Evaluation",
       icon: <Database className="w-5 h-5 text-emerald-400" />,
-      shortDesc: "Curating specialized speech datasets, clinical acoustic disfluency taxonomies, historical language retrieval benchmarks, and multidialectal evaluation corpora.",
+      shortDesc:
+        "Building the resources the field is missing: speech corpora, annotation schemes, and evaluation frameworks released openly, so that progress on atypical speech and low-resource languages can be measured fairly.",
       bullets: [
         "ArVoice: Multi-Speaker Dataset for Arabic Speech Synthesis",
-        "Gretino: Greek & Latin Classical Language Dataset",
-        "All languages matter: Evaluating lmms on culturally diverse 100 languages"
-      ]
-    }
+        "PolyWER: Evaluating Code-Switched Speech Recognition",
+        "Gretino: Greek & Latin Retrieval Benchmark",
+        "NADI 2025 & Iqra'Eval shared tasks",
+      ],
+    },
   ];
+
+  const countFor = (category: string) =>
+    ALL_PUBLICATIONS.filter((p) => p.category === category).length;
 
   return (
     <section id="research" className="py-20 border-t border-white/5 bg-[#07080D]">
       <div className="max-w-7xl mx-auto px-6">
-        
+
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-          <div>
-            <h2
-              className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              Research Interests
-            </h2>
-          </div>
+        <div className="mb-12 max-w-3xl">
+          <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest">
+            What I work on
+          </p>
+          <h2
+            className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            Research Interests
+          </h2>
+          <p className="mt-4 text-base sm:text-lg text-slate-200 leading-relaxed">
+            {RESEARCH_STATEMENT}
+          </p>
         </div>
 
-        {/* 3 Research Pillars Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {pillars.map((pillar, idx) => (
+        {/* How I work */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          {APPROACH.map((item) => (
             <div
-              key={pillar.id}
-              className="group relative p-7 rounded-2xl border border-white/10 bg-[#0E111C]/70 hover:bg-[#121625] transition-all duration-300 hover:border-amber-400/40 flex flex-col justify-between"
+              key={item.title}
+              className="p-4 rounded-xl border border-white/10 bg-white/[0.02]"
             >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2.5 rounded-lg bg-white/5 border border-white/10">
-                    {pillar.icon}
-                  </div>
-                  <span className="font-mono text-xs text-slate-500 tabular-nums">
-                    0{idx + 1}
-                  </span>
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-md bg-white/5 border border-white/10">
+                  {item.icon}
                 </div>
-
-                <h3 className="text-xl font-bold text-white group-hover:text-amber-300 transition-colors">
-                  {pillar.title}
-                </h3>
-
-                {/* Award badge if present */}
-                {pillar.award && (
-                  <div className="mt-2.5 flex items-start gap-1.5 text-xs text-amber-300 font-semibold bg-amber-500/10 border border-amber-400/20 rounded-lg p-2">
-                    <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                    <span>{pillar.award}</span>
-                  </div>
-                )}
-
-                <p className="text-sm text-slate-300 leading-relaxed mt-3 mb-5">
-                  {pillar.shortDesc}
-                </p>
-
-                {/* Dedicated Project Link for AI for Stuttered Speech */}
-                {pillar.projectLink && (
-                  <div className="mb-4">
-                    <a
-                      href={pillar.projectLink.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300 hover:text-amber-200 text-xs font-semibold transition-colors"
-                    >
-                      <span>Explore StutterBank Project Page</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                )}
+                <h3 className="text-sm font-bold text-white leading-snug">{item.title}</h3>
               </div>
-
-              <div>
-                {/* Zero-Pill Sub-topics with typographic separators */}
-                <div className="pt-4 border-t border-white/5">
-                  <div className="text-xs text-slate-400 leading-relaxed flex flex-wrap items-center gap-x-2 gap-y-1">
-                    {pillar.bullets.map((area, i) => (
-                      <React.Fragment key={area}>
-                        <span className="hover:text-white transition-colors">{area}</span>
-                        {i < pillar.bullets.length - 1 && (
-                          <span aria-hidden="true" className="text-amber-400/50">·</span>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => onSelectTopic(pillar.id)}
-                  className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
-                >
-                  <span>Filter {pillar.title} publications</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
+              <p className="mt-2.5 text-xs text-slate-400 leading-relaxed">{item.desc}</p>
             </div>
           ))}
+        </div>
+
+        {/* 3 Research Areas Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {pillars.map((pillar, idx) => {
+            const count = countFor(pillar.category);
+            return (
+              <div
+                key={pillar.id}
+                className="group relative p-7 rounded-2xl border border-white/10 bg-[#0E111C]/70 hover:bg-[#121625] transition-all duration-300 hover:border-amber-400/40 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-2.5 rounded-lg bg-white/5 border border-white/10">
+                      {pillar.icon}
+                    </div>
+                    <span className="font-mono text-xs text-slate-500 tabular-nums">
+                      0{idx + 1}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-white group-hover:text-amber-300 transition-colors leading-snug">
+                    {pillar.title}
+                  </h3>
+
+                  {/* Award badge if present */}
+                  {pillar.award && (
+                    <div className="mt-2.5 flex items-start gap-1.5 text-xs text-amber-300 font-semibold bg-amber-500/10 border border-amber-400/20 rounded-lg p-2">
+                      <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                      <span>{pillar.award}</span>
+                    </div>
+                  )}
+
+                  <p className="text-sm text-slate-300 leading-relaxed mt-3 mb-5">
+                    {pillar.shortDesc}
+                  </p>
+
+                  {/* Dedicated project link */}
+                  {pillar.projectLink && (
+                    <div className="mb-4">
+                      <a
+                        href={pillar.projectLink.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300 hover:text-amber-200 text-xs font-semibold transition-colors"
+                      >
+                        <span>Explore {pillar.projectLink.title}</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  {/* Selected work */}
+                  <div className="pt-4 border-t border-white/5">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">
+                      Selected work
+                    </p>
+                    <ul className="space-y-1.5">
+                      {pillar.bullets.map((area) => (
+                        <li
+                          key={area}
+                          className="flex items-start gap-2 text-xs text-slate-400 leading-relaxed hover:text-white transition-colors"
+                        >
+                          <span aria-hidden="true" className="text-amber-400/60 mt-px">›</span>
+                          <span>{area}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button
+                    onClick={() => onSelectTopic(pillar.id)}
+                    className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                  >
+                    <span>
+                      View {count} related {count === 1 ? 'publication' : 'publications'}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
       </div>
